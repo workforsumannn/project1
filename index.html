@@ -1,444 +1,257 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tere Liye - Romantic Player</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@400;600&family=Poppins:wght@300;400&display=swap');
+import React, { useState, useRef, useEffect } from 'react';
+import { Heart, Music, Play, Pause, RefreshCw, Sparkles, Star, Feather } from 'lucide-react';
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            overflow: hidden;
-            background: linear-gradient(-45deg, #1a0b1e, #3d102e, #581c2f, #2c0919);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: white;
-            user-select: none;
-        }
+const App = () => {
+  const [isStarted, setIsStarted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [activeLyricIndex, setActiveLyricIndex] = useState(0);
+  const [clicks, setClicks] = useState([]);
+  const audioRef = useRef(null);
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+  // Synced Lyrics for the provided song
+  const lyrics = [
+    { text: "Kaagaz ke phool laau tere liye", time: 0 },
+    { text: "Khat likhu tere liye", time: 4.5 },
+    { text: "Mai khuda me maanu nahi", time: 9.0 },
+    { text: "Par maangu dua tere liye", time: 13.5 },
+    { text: "💙", time: 18.0, isIcon: true },
+    { text: "Tere liye ghar banaau", time: 21.0 },
+    { text: "Deewaarein neele rang se sajaau", time: 25.5 },
+    { text: "Pasand hai tumhe, maloom hai", time: 30.0 },
+    { text: "Tumne bataya tha ek dafe", time: 34.5 },
+    { text: "💠", time: 39.0, isIcon: true },
+    { text: "Neele phool laau tere liye", time: 41.5 },
+    { text: "Khat likhu tere liye", time: 46.0 },
+    { text: "Mai khuda me maanu nahi", time: 50.5 },
+    { text: "Par maangu dua tere liye", time: 55.0 },
+    { text: "✨", time: 59.5, isIcon: true },
+    { text: "Teri baatein nasamajh si phir bhi jaayaz lag rahi hai", time: 63.0 },
+    { text: "Tu pareshan kar rahi hai phir bhi masoom lag rahi hai", time: 71.5 },
+    { text: "Tere liye mandir jaaun", time: 80.5 },
+    { text: "Tere naam ka dia jalaaun", time: 85.0 },
+    { text: "Hasta rahe tu chaahe jo ho", time: 89.5 },
+    { text: "Teri hasi ko nazar na lage", time: 94.0 },
+    { text: "🧿", time: 98.5, isIcon: true },
+    { text: "Kaagaz ke phool laau tere liye", time: 102.0 },
+    { text: "Khat likhu tere liye", time: 106.5 },
+    { text: "Mai khuda me maanu nahi", time: 111.0 },
+    { text: "Par maangu dua tere liye...", time: 115.5 },
+    { text: "🌊", time: 120.0, isIcon: true },
+    { text: "Tere liye hum bane hai", time: 123.5 },
+    { text: "Tere liye badal rahe hai", time: 128.0 },
+    { text: "Kya mohabbat ho gayi hai", time: 132.5 },
+    { text: "Teri hi teri baatein kare", time: 137.0 },
+    { text: "📖", time: 141.5, isIcon: true },
+    { text: "Tere liye ghar banaau", time: 144.5 },
+    { text: "Deewaarein neele rang se sajaau", time: 149.0 },
+    { text: "Pasand hai tumhe, maloom hai", time: 153.5 },
+    { text: "Tumne bataya tha ek dafe", time: 158.0 },
+    { text: "🖋️", time: 162.5, isIcon: true },
+    { text: "Dekh shayar bana tere liye", time: 166.5 },
+    { text: "Nagma likha tere liye", time: 171.0 },
+    { text: "Mai khuda me maanu kyun", time: 175.5 },
+    { text: "Tu khuda mere liye ❤️", time: 180.0 },
+  ];
 
-        /* Floating Hearts & Sparkles */
-        .particle {
-            position: absolute;
-            pointer-events: none;
-            animation: floatUp linear infinite;
-        }
+  useEffect(() => {
+    // Adding Google Fonts
+    const link = document.createElement('link');
+    link.href = 'https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap';
+    link.rel = 'stylesheet';
+    document.head.appendChild(link);
+  }, []);
 
-        @keyframes floatUp {
-            0% { transform: translateY(110vh) scale(0.5) rotate(0deg); opacity: 0; }
-            20% { opacity: 0.8; }
-            80% { opacity: 0.6; }
-            100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
-        }
+  const handleStart = () => {
+    setIsStarted(true);
+    setIsPlaying(true);
+    if (audioRef.current) audioRef.current.play();
+  };
 
-        /* Diya (Lamp) Styling */
-        .diya-wrapper {
-            position: relative;
-            z-index: 10;
-            filter: drop-shadow(0 0 30px rgba(255, 165, 0, 0.4));
-            margin-top: 2rem;
-        }
+  const handleScreenClick = (e) => {
+    const newClick = { id: Date.now(), x: e.clientX, y: e.clientY };
+    setClicks(prev => [...prev, newClick]);
+    setTimeout(() => setClicks(prev => prev.filter(c => c.id !== newClick.id)), 1000);
+  };
 
-        .diya-container {
-            width: 160px;
-            height: 140px;
-            position: relative;
-            margin: 0 auto 1rem auto;
-            transition: transform 0.5s ease;
-        }
+  useEffect(() => {
+    const audio = audioRef.current;
+    const handleTimeUpdate = () => {
+      const current = audio.currentTime;
+      setCurrentTime(current);
+      const index = lyrics.findLastIndex(l => current >= l.time);
+      if (index !== -1 && index !== activeLyricIndex) {
+        setActiveLyricIndex(index);
+      }
+    };
+    if (audio) {
+      audio.addEventListener('timeupdate', handleTimeUpdate);
+      return () => audio.removeEventListener('timeupdate', handleTimeUpdate);
+    }
+  }, [activeLyricIndex]);
 
-        .diya-base {
-            width: 140px;
-            height: 70px;
-            background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
-            border-radius: 0 0 70px 70px;
-            position: absolute;
-            bottom: 0;
-            left: 10px;
-            box-shadow: inset 0 -5px 10px rgba(0,0,0,0.3), 0 5px 25px rgba(255, 215, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+  const togglePlay = () => {
+    if (audioRef.current.paused) audioRef.current.play();
+    else audioRef.current.pause();
+    setIsPlaying(!audioRef.current.paused);
+  };
 
-        .diya-text {
-            font-family: 'Great Vibes', cursive;
-            font-size: 1.8rem;
-            color: #5c0e18;
-            text-shadow: 0 1px 1px rgba(255,255,255,0.4);
-            z-index: 5;
-            margin-top: 10px;
-            animation: glowText 3s infinite alternate;
-        }
-
-        @keyframes glowText {
-            0% { opacity: 0.8; }
-            100% { opacity: 1; text-shadow: 0 0 10px rgba(255, 100, 100, 0.8); }
-        }
-
-        .diya-base::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 10px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 50%;
-        }
-
-        .flame {
-            width: 40px;
-            height: 80px;
-            background: linear-gradient(to bottom, #fff, #ffff00, #ff8c00, #ff4500);
-            border-radius: 50% 50% 20% 20%;
-            position: absolute;
-            bottom: 55px;
-            left: 60px;
-            filter: blur(1px);
-            animation: flicker 1.5s infinite alternate ease-in-out;
-            box-shadow: 0 0 20px #ff8c00, 0 0 50px #ff4500;
-            transform-origin: center bottom;
-            opacity: 0.9;
-        }
-
-        @keyframes flicker {
-            0% { transform: scale(1) rotate(-2deg); height: 80px; }
-            100% { transform: scale(1) rotate(-1deg); height: 80px; }
-        }
-
-        /* Halo */
-        .glow-halo {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 220px; height: 220px;
-            background: radial-gradient(circle, rgba(255, 100, 100, 0.2) 0%, transparent 70%);
-            animation: pulseHalo 4s infinite;
-            z-index: -1;
-        }
-
-        @keyframes pulseHalo {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
-            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
-        }
-
-        /* --- DYNAMIC VISUALS STYLING --- */
-        .dynamic-icon-container {
-            position: absolute;
-            top: -80px; /* Float above Diya */
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            pointer-events: none;
-            z-index: 15;
-        }
-
-        .visual-icon {
-            position: absolute;
-            opacity: 0;
-            transform: scale(0.5) translateY(20px);
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            font-size: 4rem;
-            filter: drop-shadow(0 0 15px rgba(255,255,255,0.6));
-        }
-
-        .visual-icon.show {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-
-        /* Specific Icon Adjustments */
-        .icon-mandir svg { width: 70px; height: 70px; fill: #ffcc00; filter: drop-shadow(0 0 10px gold); }
-        .icon-smile { font-size: 4rem; }
-        .icon-nazar { font-size: 4rem; animation: floatIcon 3s ease-in-out infinite; }
-        
-        @keyframes floatIcon {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        /* Lyrics Styling */
-        .lyrics-container {
-            min-height: 220px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 20;
-            padding: 0 20px;
-        }
-
-        .lyric-line {
-            font-family: 'Great Vibes', cursive;
-            font-size: 1.8rem;
-            color: rgba(255, 255, 255, 0.4);
-            transition: all 0.8s;
-            text-align: center;
-            margin: 5px 0;
-            filter: blur(2px);
-            transform: scale(0.8);
-        }
-
-        .lyric-line.active {
-            font-size: 3rem;
-            background: linear-gradient(to bottom, #fff, #ffd1dc);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(255, 20, 147, 0.6);
-            transform: scale(1.1);
-            filter: blur(0);
-            margin: 15px 0;
-            opacity: 1;
-        }
-
-        /* Controls */
-        .glass-panel {
-            background: rgba(40, 10, 30, 0.3);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 30px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .play-btn {
-            background: linear-gradient(135deg, #ff416c, #ff4b2b);
-            box-shadow: 0 4px 15px rgba(255, 75, 43, 0.4);
-            transition: all 0.3s ease;
-        }
-        .play-btn:hover { transform: translateY(-2px) scale(1.02); }
-
-    </style>
-</head>
-<body class="flex flex-col items-center justify-center min-h-screen">
-
-    <div id="particles-container"></div>
-
-    <div class="absolute top-10 text-center opacity-80 z-20">
-        <h1 class="text-xs tracking-[0.5em] text-pink-200 uppercase font-light">Soulmate</h1>
-        <div class="w-12 h-[1px] bg-gradient-to-r from-transparent via-pink-300 to-transparent mx-auto mt-2"></div>
-    </div>
-
-    <!-- Main Visuals Wrapper -->
-    <div class="diya-wrapper">
-        
-        <!-- Icons appearing above Diya -->
-        <div class="dynamic-icon-container">
-            <!-- Mandir Icon -->
-            <div id="visual-0" class="visual-icon icon-mandir">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0">
-                    <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2z" fill="#ffcc00"/>
-                    <path d="M12 4.5l6 6V18h-4v-5h-4v5H6v-7.5l6-6z" fill="#ffaa00" opacity="0.5"/>
-                </svg>
-            </div>
-            
-            <!-- Diya Emphasis (Empty div, default state) -->
-            <div id="visual-1" class="visual-icon"></div> 
-
-            <!-- Smile Icon -->
-            <div id="visual-2" class="visual-icon icon-smile">😊</div>
-
-            <!-- Nazar Icon (Evil Eye) -->
-            <div id="visual-3" class="visual-icon icon-nazar">🧿</div>
+  return (
+    <div 
+      className="min-h-screen bg-[#02040a] flex items-center justify-center p-6 overflow-hidden relative"
+      style={{ cursor: 'url("https://cur.cursors-4u.net/nature/nat-10/nat984.cur"), auto' }}
+      onClick={handleScreenClick}
+    >
+      {/* Click Particles */}
+      {clicks.map(click => (
+        <div 
+          key={click.id} 
+          className="fixed pointer-events-none z-50 animate-sparkle-pop"
+          style={{ left: click.x, top: click.y }}
+        >
+          <Star className="text-blue-400 fill-current w-4 h-4" />
         </div>
+      ))}
 
-        <div class="glow-halo"></div>
+      {/* Aesthetic Background */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-full h-full bg-blue-900/10 blur-[120px] rounded-full"></div>
+        <div className="absolute bottom-0 right-0 w-64 h-64 bg-indigo-500/5 blur-[100px] rounded-full"></div>
         
-        <div class="diya-container">
-            <div class="flame"></div>
-            <div class="diya-base">
-                <span class="diya-text"></span>
-            </div>
+        {/* Slow Moving Blue Stars */}
+        {[...Array(20)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute animate-twinkle bg-blue-300 rounded-full"
+            style={{
+              width: Math.random() * 3 + 'px',
+              height: Math.random() * 3 + 'px',
+              left: Math.random() * 100 + '%',
+              top: Math.random() * 100 + '%',
+              animationDelay: Math.random() * 5 + 's',
+              boxShadow: '0 0 10px #60a5fa'
+            }}
+          />
+        ))}
+      </div>
+
+      <audio ref={audioRef} src="http://googleusercontent.com/file_content/0" />
+
+      {!isStarted ? (
+        <div onClick={handleStart} className="z-10 text-center cursor-pointer animate-fade-in group">
+          <div className="relative mb-10 w-48 h-64 mx-auto perspective-1000">
+             <div className="w-full h-full bg-[#0a0f1d] border-2 border-blue-500/20 rounded-r-2xl flex flex-col items-center justify-center shadow-[20px_20px_50px_rgba(0,0,0,0.7)] group-hover:rotate-y-12 transition-transform duration-700">
+                <Feather className="w-12 h-12 text-blue-400 mb-4 animate-pulse" />
+                <span className="text-[10px] tracking-[0.5em] text-blue-200 uppercase font-bold">Diary</span>
+             </div>
+             <div className="absolute -inset-2 bg-blue-500/5 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+          </div>
+          <p className="font-['Playfair_Display'] italic text-blue-400/60 tracking-widest animate-bounce">Click to read my heart...</p>
         </div>
-    </div>
+      ) : (
+        <div className="w-full max-w-4xl z-10 flex flex-col items-center gap-16 animate-page-reveal">
+          
+          {/* Lyrics Display Area */}
+          <div className="relative w-full h-64 flex flex-col items-center justify-center text-center">
+             {lyrics.map((line, idx) => {
+               const isActive = idx === activeLyricIndex;
+               const isPast = idx < activeLyricIndex;
+               
+               return (
+                 <div
+                   key={idx}
+                   className={`absolute w-full px-4 transition-all duration-1000 ease-out 
+                    ${isActive ? 'opacity-100 translate-y-0 filter-none scale-100' : 'opacity-0'}
+                    ${isPast ? '-translate-y-20 blur-md scale-90' : 'translate-y-20 blur-md scale-90'}
+                   `}
+                 >
+                    {line.isIcon ? (
+                      <div className="text-7xl animate-pulse drop-shadow-[0_0_20px_rgba(96,165,250,0.6)]">
+                         {line.text}
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-4">
+                        <h2 className="font-['Dancing_Script'] text-4xl md:text-7xl text-blue-50 drop-shadow-[0_4px_15px_rgba(0,0,0,0.8)] tracking-wide">
+                          {line.text}
+                        </h2>
+                        {isActive && (
+                          <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-blue-400 to-transparent animate-expand"></div>
+                        )}
+                      </div>
+                    )}
+                 </div>
+               );
+             })}
+          </div>
 
-    <!-- Lyrics -->
-    <div class="lyrics-container w-full" id="lyrics-box">
-        <p class="lyric-line active">Tere Liye</p>
-    </div>
-
-    <!-- Controls -->
-    <div class="relative z-30 w-full max-w-sm px-6 mt-6">
-        <div class="glass-panel p-6 flex flex-col gap-5">
-            <!-- Changed src to simple 'song.mp3' -->
-            <audio id="audio-player" src="song.mp3" preload="auto"></audio>
-            <input type="file" id="fallback-input" accept="audio/*" class="hidden">
-
-            <button id="play-btn" class="play-btn w-full text-white font-serif tracking-wider font-bold py-4 px-6 rounded-full flex items-center justify-center gap-3 group">
-                <span class="bg-white/20 p-2 rounded-full">
-                    <svg id="play-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="text-white"><path d="M8 5v14l11-7z"/></svg>
-                </span>
-                <span class="text-lg">Start Journey</span>
-            </button>
-
-            <div class="pt-3 border-t border-white/5">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="text-[10px] text-pink-200/70 uppercase tracking-widest">Sync Lyrics</span>
-                    <span class="text-[10px] text-white/50 font-mono" id="offset-display">0.0s</span>
-                </div>
-                <input type="range" id="offset-slider" min="-10" max="10" step="0.5" value="0" class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer">
-            </div>
-
-            <div id="error-msg" class="hidden text-center mt-1">
-                <button id="manual-load-btn" class="text-[10px] text-pink-200 underline hover:text-white transition">
-                    Song file missing? Click here to select.
+          {/* Controls & Branding */}
+          <div className="flex flex-col items-center gap-8 w-full">
+             <div className="flex items-center gap-10">
+                <button onClick={() => window.location.reload()} className="text-blue-500/30 hover:text-blue-400 transition-colors">
+                   <RefreshCw className="w-5 h-5" />
                 </button>
-            </div>
+                
+                <button 
+                  onClick={togglePlay}
+                  className="w-20 h-20 bg-blue-600/5 border border-blue-500/30 rounded-full flex items-center justify-center text-blue-400 shadow-[0_0_30px_rgba(37,99,235,0.1)] hover:bg-blue-600/10 hover:scale-110 active:scale-95 transition-all"
+                >
+                  {isPlaying ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 ml-1 fill-current" />}
+                </button>
+
+                <div className="text-blue-500/30">
+                   <Heart className={`w-5 h-5 ${isPlaying ? 'text-red-400 animate-pulse fill-current' : ''}`} />
+                </div>
+             </div>
+
+             {/* Signature Style Credit */}
+             <div className="flex flex-col items-center gap-1 mt-4">
+                <div className="h-[1px] w-48 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent mb-4"></div>
+                <p className="font-['Dancing_Script'] text-xl text-blue-400/80 tracking-widest">
+                  Edit by <span className="text-blue-200 font-bold ml-1">Ft. Sumann</span>
+                </p>
+                <span className="font-['Playfair_Display'] text-[8px] uppercase tracking-[0.6em] text-blue-500/40">Pure Romance Experience</span>
+             </div>
+          </div>
         </div>
+      )}
+
+      <style jsx>{`
+        @keyframes twinkle {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.2); }
+        }
+        .animate-twinkle { animation: twinkle 3s ease-in-out infinite; }
+        
+        @keyframes expand {
+          from { width: 0; opacity: 0; }
+          to { width: 96px; opacity: 1; }
+        }
+        .animate-expand { animation: expand 1s ease-out forwards; }
+
+        @keyframes sparkle-pop {
+          0% { transform: scale(0) rotate(0deg); opacity: 1; }
+          100% { transform: scale(2) rotate(180deg); opacity: 0; }
+        }
+        .animate-sparkle-pop { animation: sparkle-pop 0.8s ease-out forwards; }
+
+        @keyframes page-reveal {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-page-reveal { animation: page-reveal 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+        @keyframes fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        .animate-fade-in { animation: fade-in 2s ease-in; }
+
+        .rotate-y-12 { transform: rotateY(15deg); }
+        .perspective-1000 { perspective: 1000px; }
+      `}</style>
     </div>
+  );
+};
 
-    <!-- Credit Text (Moved to Bottom Right) -->
-    <div class="fixed bottom-4 right-4 z-50 text-right opacity-70 pointer-events-none">
-        <p class="text-[10px] uppercase tracking-widest text-pink-200 font-light font-serif">
-            Edit by ft.sumann
-        </p>
-    </div>
+export default App;
 
-    <script>
-        const lyricsData = [
-            { text: "Tere liye mandir jaaun", start: 0, end: 6 },
-            { text: "Tere naam ka dia jalaaun", start: 6, end: 12 },
-            { text: "Hasta rahe tu chaahe jo ho", start: 12, end: 18 },
-            { text: "Teri hasi ko nazar na lage", start: 18, end: 100 }
-        ];
-
-        const audioPlayer = document.getElementById('audio-player');
-        const playBtn = document.getElementById('play-btn');
-        const lyricsBox = document.getElementById('lyrics-box');
-        const offsetSlider = document.getElementById('offset-slider');
-        const offsetDisplay = document.getElementById('offset-display');
-        const errorMsg = document.getElementById('error-msg');
-        const fallbackInput = document.getElementById('fallback-input');
-        const manualLoadBtn = document.getElementById('manual-load-btn');
-        const diyaContainer = document.querySelector('.diya-container');
-
-        let globalOffset = 0;
-        let isPlaying = false;
-
-        function renderLyrics() {
-            lyricsBox.innerHTML = '';
-            lyricsData.forEach((line, index) => {
-                const p = document.createElement('p');
-                p.className = `lyric-line`;
-                p.innerText = line.text;
-                lyricsBox.appendChild(p);
-            });
-        }
-        renderLyrics();
-
-        // Particles
-        function createParticle() {
-            const container = document.getElementById('particles-container');
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            const type = Math.random() > 0.7 ? '✨' : '❤';
-            particle.innerText = type;
-            particle.style.left = Math.random() * 100 + 'vw';
-            particle.style.fontSize = Math.random() * 20 + 10 + 'px';
-            particle.style.color = type === '❤' ? `rgba(255, ${Math.random()*100 + 100}, 150, ${Math.random()})` : '#fff';
-            particle.style.animationDuration = Math.random() * 5 + 5 + 's';
-            container.appendChild(particle);
-            setTimeout(() => particle.remove(), 10000);
-        }
-        setInterval(createParticle, 400);
-
-        // Player Logic
-        playBtn.addEventListener('click', () => {
-            if (isPlaying) {
-                audioPlayer.pause();
-                updatePlayButton(false);
-            } else {
-                const playPromise = audioPlayer.play();
-                if (playPromise !== undefined) {
-                    playPromise.then(_ => {
-                        updatePlayButton(true);
-                        errorMsg.classList.add('hidden');
-                    }).catch(error => {
-                        updatePlayButton(false);
-                        errorMsg.classList.remove('hidden');
-                    });
-                }
-            }
-        });
-
-        function updatePlayButton(playing) {
-            isPlaying = playing;
-            playBtn.innerHTML = playing ? 
-                `<span class="bg-white/20 p-2 rounded-full animate-pulse"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span><span class="text-lg">Pause Moment</span>` : 
-                `<span class="bg-white/20 p-2 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span class="text-lg">Resume Journey</span>`;
-        }
-
-        manualLoadBtn.addEventListener('click', () => fallbackInput.click());
-        fallbackInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                audioPlayer.src = URL.createObjectURL(file);
-                errorMsg.classList.add('hidden');
-                audioPlayer.play();
-                updatePlayButton(true);
-            }
-        });
-
-        // UPDATE VISUALS FUNCTION
-        function updateVisuals(index) {
-            // Hide all icons first
-            document.querySelectorAll('.visual-icon').forEach(icon => icon.classList.remove('show'));
-            
-            // Show current icon if exists for this index
-            const currentIcon = document.getElementById(`visual-${index}`);
-            if(currentIcon) {
-                currentIcon.classList.add('show');
-            }
-
-            // Special effect for Diya on Index 1 ("Tere naam ka diya")
-            if (index === 1) {
-                diyaContainer.style.transform = "scale(1.2)";
-                diyaContainer.style.filter = "drop-shadow(0 0 20px gold)";
-            } else {
-                diyaContainer.style.transform = "scale(1)";
-                diyaContainer.style.filter = "none";
-            }
-        }
-
-        // TIME UPDATE LOGIC
-        audioPlayer.addEventListener('timeupdate', () => {
-            const adjustedTime = audioPlayer.currentTime - globalOffset;
-            const activeIndex = lyricsData.findIndex(line => adjustedTime >= line.start && adjustedTime < line.end);
-
-            document.querySelectorAll('.lyric-line').forEach((el, index) => {
-                if (index === activeIndex) {
-                    if (!el.classList.contains('active')) {
-                        el.classList.add('active');
-                        // Trigger visual update
-                        updateVisuals(activeIndex);
-                    }
-                } else {
-                    el.classList.remove('active');
-                }
-            });
-            
-            // Reset if song ended
-            if(adjustedTime > lyricsData[lyricsData.length-1].end) {
-                 updateVisuals(-1);
-            }
-        });
-
-        offsetSlider.addEventListener('input', (e) => {
-            globalOffset = parseFloat(e.target.value);
-            offsetDisplay.innerText = (globalOffset > 0 ? '+' : '') + globalOffset + 's';
-            if (!isPlaying && audioPlayer.currentTime > 0) audioPlayer.dispatchEvent(new Event('timeupdate'));
-        });
-
-    </script>
-</body>
-</html>
