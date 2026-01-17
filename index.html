@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tere Liye - Romantic Player</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@400;600&family=Poppins:wght@300;400&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            background: linear-gradient(-45deg, #1a0b1e, #3d102e, #581c2f, #2c0919);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: white;
+            user-select: none;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating Hearts & Sparkles */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            animation: floatUp linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(110vh) scale(0.5) rotate(0deg); opacity: 0; }
+            20% { opacity: 0.8; }
+            80% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) scale(1.2) rotate(360deg); opacity: 0; }
+        }
+
+        /* Diya (Lamp) Styling */
+        .diya-wrapper {
+            position: relative;
+            z-index: 10;
+            filter: drop-shadow(0 0 30px rgba(255, 165, 0, 0.4));
+            margin-top: 2rem;
+        }
+
+        .diya-container {
+            width: 160px;
+            height: 140px;
+            position: relative;
+            margin: 0 auto 1rem auto;
+            transition: transform 0.5s ease;
+        }
+
+        .diya-base {
+            width: 140px;
+            height: 70px;
+            background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
+            border-radius: 0 0 70px 70px;
+            position: absolute;
+            bottom: 0;
+            left: 10px;
+            box-shadow: inset 0 -5px 10px rgba(0,0,0,0.3), 0 5px 25px rgba(255, 215, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .diya-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.8rem;
+            color: #5c0e18;
+            text-shadow: 0 1px 1px rgba(255,255,255,0.4);
+            z-index: 5;
+            margin-top: 10px;
+            animation: glowText 3s infinite alternate;
+        }
+
+        @keyframes glowText {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; text-shadow: 0 0 10px rgba(255, 100, 100, 0.8); }
+        }
+
+        .diya-base::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 10px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+        }
+
+        .flame {
+            width: 40px;
+            height: 80px;
+            background: linear-gradient(to bottom, #fff, #ffff00, #ff8c00, #ff4500);
+            border-radius: 50% 50% 20% 20%;
+            position: absolute;
+            bottom: 55px;
+            left: 60px;
+            filter: blur(1px);
+            animation: flicker 1.5s infinite alternate ease-in-out;
+            box-shadow: 0 0 20px #ff8c00, 0 0 50px #ff4500;
+            transform-origin: center bottom;
+            opacity: 0.9;
+        }
+
+        @keyframes flicker {
+            0% { transform: scale(1) rotate(-2deg); height: 80px; }
+            100% { transform: scale(1) rotate(-1deg); height: 80px; }
+        }
+
+        /* Halo */
+        .glow-halo {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 220px; height: 220px;
+            background: radial-gradient(circle, rgba(255, 100, 100, 0.2) 0%, transparent 70%);
+            animation: pulseHalo 4s infinite;
+            z-index: -1;
+        }
+
+        @keyframes pulseHalo {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.8; }
+        }
+
+        /* --- DYNAMIC VISUALS STYLING --- */
+        .dynamic-icon-container {
+            position: absolute;
+            top: -80px; /* Float above Diya */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        .visual-icon {
+            position: absolute;
+            opacity: 0;
+            transform: scale(0.5) translateY(20px);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 4rem;
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.6));
+        }
+
+        .visual-icon.show {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+        }
+
+        /* Specific Icon Adjustments */
+        .icon-mandir svg { width: 70px; height: 70px; fill: #ffcc00; filter: drop-shadow(0 0 10px gold); }
+        .icon-smile { font-size: 4rem; }
+        .icon-nazar { font-size: 4rem; animation: floatIcon 3s ease-in-out infinite; }
+        
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Lyrics Styling */
+        .lyrics-container {
+            min-height: 220px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            padding: 0 20px;
+        }
+
+        .lyric-line {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.8rem;
+            color: rgba(255, 255, 255, 0.4);
+            transition: all 0.8s;
+            text-align: center;
+            margin: 5px 0;
+            filter: blur(2px);
+            transform: scale(0.8);
+        }
+
+        .lyric-line.active {
+            font-size: 3rem;
+            background: linear-gradient(to bottom, #fff, #ffd1dc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 20, 147, 0.6);
+            transform: scale(1.1);
+            filter: blur(0);
+            margin: 15px 0;
+            opacity: 1;
+        }
+
+        /* Controls */
+        .glass-panel {
+            background: rgba(40, 10, 30, 0.3);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .play-btn {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            box-shadow: 0 4px 15px rgba(255, 75, 43, 0.4);
+            transition: all 0.3s ease;
+        }
+        .play-btn:hover { transform: translateY(-2px) scale(1.02); }
+
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen">
+
+    <div id="particles-container"></div>
+
+    <div class="absolute top-10 text-center opacity-80 z-20">
+        <h1 class="text-xs tracking-[0.5em] text-pink-200 uppercase font-light">Soulmate</h1>
+        <div class="w-12 h-[1px] bg-gradient-to-r from-transparent via-pink-300 to-transparent mx-auto mt-2"></div>
+    </div>
+
+    <!-- Main Visuals Wrapper -->
+    <div class="diya-wrapper">
+        
+        <!-- Icons appearing above Diya -->
+        <div class="dynamic-icon-container">
+            <!-- Mandir Icon -->
+            <div id="visual-0" class="visual-icon icon-mandir">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0">
+                    <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2z" fill="#ffcc00"/>
+                    <path d="M12 4.5l6 6V18h-4v-5h-4v5H6v-7.5l6-6z" fill="#ffaa00" opacity="0.5"/>
+                </svg>
+            </div>
+            
+            <!-- Diya Emphasis (Empty div, default state) -->
+            <div id="visual-1" class="visual-icon"></div> 
+
+            <!-- Smile Icon -->
+            <div id="visual-2" class="visual-icon icon-smile">😊</div>
+
+            <!-- Nazar Icon (Evil Eye) -->
+            <div id="visual-3" class="visual-icon icon-nazar">🧿</div>
+        </div>
+
+        <div class="glow-halo"></div>
+        
+        <div class="diya-container">
+            <div class="flame"></div>
+            <div class="diya-base">
+                <span class="diya-text"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lyrics -->
+    <div class="lyrics-container w-full" id="lyrics-box">
+        <p class="lyric-line active">Tere Liye</p>
+    </div>
+
+    <!-- Controls -->
+    <div class="relative z-30 w-full max-w-sm px-6 mt-6">
+        <div class="glass-panel p-6 flex flex-col gap-5">
+            <audio id="audio-player" src="tere-liye-mandir-jau-radhe-emotional-jaan-mysoul-tereliye-feelings-nightl_O0cfQE9s.mp3" preload="auto"></audio>
+            <input type="file" id="fallback-input" accept="audio/*" class="hidden">
+
+            <button id="play-btn" class="play-btn w-full text-white font-serif tracking-wider font-bold py-4 px-6 rounded-full flex items-center justify-center gap-3 group">
+                <span class="bg-white/20 p-2 rounded-full">
+                    <svg id="play-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="text-white"><path d="M8 5v14l11-7z"/></svg>
+                </span>
+                <span class="text-lg">Start Journey</span>
+            </button>
+
+            <div class="pt-3 border-t border-white/5">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-[10px] text-pink-200/70 uppercase tracking-widest">Sync Lyrics</span>
+                    <span class="text-[10px] text-white/50 font-mono" id="offset-display">0.0s</span>
+                </div>
+                <input type="range" id="offset-slider" min="-10" max="10" step="0.5" value="0" class="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer">
+            </div>
+
+            <div id="error-msg" class="hidden text-center mt-1">
+                <button id="manual-load-btn" class="text-[10px] text-pink-200 underline hover:text-white transition">
+                    Song file missing? Click here to select.
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Credit Text added here -->
+    <div class="z-20 mt-6 mb-4 opacity-70">
+        <p class="text-xs tracking-[0.2em] text-pink-200 font-light font-serif border-b border-pink-200/30 pb-1">Edit by ft.sumann</p>
+    </div>
+
+    <script>
+        const lyricsData = [
+            { text: "Tere liye mandir jaaun", start: 0, end: 6 },
+            { text: "Tere naam ka dia jalaaun", start: 6, end: 12 },
+            { text: "Hasta rahe tu chaahe jo ho", start: 12, end: 18 },
+            { text: "Teri hasi ko nazar na lage", start: 18, end: 100 }
+        ];
+
+        const audioPlayer = document.getElementById('audio-player');
+        const playBtn = document.getElementById('play-btn');
+        const lyricsBox = document.getElementById('lyrics-box');
+        const offsetSlider = document.getElementById('offset-slider');
+        const offsetDisplay = document.getElementById('offset-display');
+        const errorMsg = document.getElementById('error-msg');
+        const fallbackInput = document.getElementById('fallback-input');
+        const manualLoadBtn = document.getElementById('manual-load-btn');
+        const diyaContainer = document.querySelector('.diya-container');
+
+        let globalOffset = 0;
+        let isPlaying = false;
+
+        function renderLyrics() {
+            lyricsBox.innerHTML = '';
+            lyricsData.forEach((line, index) => {
+                const p = document.createElement('p');
+                p.className = `lyric-line`;
+                p.innerText = line.text;
+                lyricsBox.appendChild(p);
+            });
+        }
+        renderLyrics();
+
+        // Particles
+        function createParticle() {
+            const container = document.getElementById('particles-container');
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            const type = Math.random() > 0.7 ? '✨' : '❤';
+            particle.innerText = type;
+            particle.style.left = Math.random() * 100 + 'vw';
+            particle.style.fontSize = Math.random() * 20 + 10 + 'px';
+            particle.style.color = type === '❤' ? `rgba(255, ${Math.random()*100 + 100}, 150, ${Math.random()})` : '#fff';
+            particle.style.animationDuration = Math.random() * 5 + 5 + 's';
+            container.appendChild(particle);
+            setTimeout(() => particle.remove(), 10000);
+        }
+        setInterval(createParticle, 400);
+
+        // Player Logic
+        playBtn.addEventListener('click', () => {
+            if (isPlaying) {
+                audioPlayer.pause();
+                updatePlayButton(false);
+            } else {
+                const playPromise = audioPlayer.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(_ => {
+                        updatePlayButton(true);
+                        errorMsg.classList.add('hidden');
+                    }).catch(error => {
+                        updatePlayButton(false);
+                        errorMsg.classList.remove('hidden');
+                    });
+                }
+            }
+        });
+
+        function updatePlayButton(playing) {
+            isPlaying = playing;
+            playBtn.innerHTML = playing ? 
+                `<span class="bg-white/20 p-2 rounded-full animate-pulse"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span><span class="text-lg">Pause Moment</span>` : 
+                `<span class="bg-white/20 p-2 rounded-full"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span class="text-lg">Resume Journey</span>`;
+        }
+
+        manualLoadBtn.addEventListener('click', () => fallbackInput.click());
+        fallbackInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                audioPlayer.src = URL.createObjectURL(file);
+                errorMsg.classList.add('hidden');
+                audioPlayer.play();
+                updatePlayButton(true);
+            }
+        });
+
+        // UPDATE VISUALS FUNCTION
+        function updateVisuals(index) {
+            // Hide all icons first
+            document.querySelectorAll('.visual-icon').forEach(icon => icon.classList.remove('show'));
+            
+            // Show current icon if exists for this index
+            const currentIcon = document.getElementById(`visual-${index}`);
+            if(currentIcon) {
+                currentIcon.classList.add('show');
+            }
+
+            // Special effect for Diya on Index 1 ("Tere naam ka diya")
+            if (index === 1) {
+                diyaContainer.style.transform = "scale(1.2)";
+                diyaContainer.style.filter = "drop-shadow(0 0 20px gold)";
+            } else {
+                diyaContainer.style.transform = "scale(1)";
+                diyaContainer.style.filter = "none";
+            }
+        }
+
+        // TIME UPDATE LOGIC
+        audioPlayer.addEventListener('timeupdate', () => {
+            const adjustedTime = audioPlayer.currentTime - globalOffset;
+            const activeIndex = lyricsData.findIndex(line => adjustedTime >= line.start && adjustedTime < line.end);
+
+            document.querySelectorAll('.lyric-line').forEach((el, index) => {
+                if (index === activeIndex) {
+                    if (!el.classList.contains('active')) {
+                        el.classList.add('active');
+                        // Trigger visual update
+                        updateVisuals(activeIndex);
+                    }
+                } else {
+                    el.classList.remove('active');
+                }
+            });
+            
+            // Reset if song ended
+            if(adjustedTime > lyricsData[lyricsData.length-1].end) {
+                 updateVisuals(-1);
+            }
+        });
+
+        offsetSlider.addEventListener('input', (e) => {
+            globalOffset = parseFloat(e.target.value);
+            offsetDisplay.innerText = (globalOffset > 0 ? '+' : '') + globalOffset + 's';
+            if (!isPlaying && audioPlayer.currentTime > 0) audioPlayer.dispatchEvent(new Event('timeupdate'));
+        });
+
+    </script>
+</body>
+</html>
