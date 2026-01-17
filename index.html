@@ -1,257 +1,229 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Heart, Music, Play, Pause, RefreshCw, Sparkles, Star, Feather } from 'lucide-react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaagaz Ke Phool | Edit by Ft. Sumann</title>
+    <!-- React & Tailwind CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        body { 
+            margin: 0; 
+            background: #02040a; 
+            color: #d1d5db; 
+            overflow: hidden; 
+            font-family: 'Playfair Display', serif;
+            cursor: crosshair;
+        }
 
-const App = () => {
-  const [isStarted, setIsStarted] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [activeLyricIndex, setActiveLyricIndex] = useState(0);
-  const [clicks, setClicks] = useState([]);
-  const audioRef = useRef(null);
+        .cursive { font-family: 'Dancing Script', cursive; }
 
-  // Synced Lyrics for the provided song
-  const lyrics = [
-    { text: "Kaagaz ke phool laau tere liye", time: 0 },
-    { text: "Khat likhu tere liye", time: 4.5 },
-    { text: "Mai khuda me maanu nahi", time: 9.0 },
-    { text: "Par maangu dua tere liye", time: 13.5 },
-    { text: "💙", time: 18.0, isIcon: true },
-    { text: "Tere liye ghar banaau", time: 21.0 },
-    { text: "Deewaarein neele rang se sajaau", time: 25.5 },
-    { text: "Pasand hai tumhe, maloom hai", time: 30.0 },
-    { text: "Tumne bataya tha ek dafe", time: 34.5 },
-    { text: "💠", time: 39.0, isIcon: true },
-    { text: "Neele phool laau tere liye", time: 41.5 },
-    { text: "Khat likhu tere liye", time: 46.0 },
-    { text: "Mai khuda me maanu nahi", time: 50.5 },
-    { text: "Par maangu dua tere liye", time: 55.0 },
-    { text: "✨", time: 59.5, isIcon: true },
-    { text: "Teri baatein nasamajh si phir bhi jaayaz lag rahi hai", time: 63.0 },
-    { text: "Tu pareshan kar rahi hai phir bhi masoom lag rahi hai", time: 71.5 },
-    { text: "Tere liye mandir jaaun", time: 80.5 },
-    { text: "Tere naam ka dia jalaaun", time: 85.0 },
-    { text: "Hasta rahe tu chaahe jo ho", time: 89.5 },
-    { text: "Teri hasi ko nazar na lage", time: 94.0 },
-    { text: "🧿", time: 98.5, isIcon: true },
-    { text: "Kaagaz ke phool laau tere liye", time: 102.0 },
-    { text: "Khat likhu tere liye", time: 106.5 },
-    { text: "Mai khuda me maanu nahi", time: 111.0 },
-    { text: "Par maangu dua tere liye...", time: 115.5 },
-    { text: "🌊", time: 120.0, isIcon: true },
-    { text: "Tere liye hum bane hai", time: 123.5 },
-    { text: "Tere liye badal rahe hai", time: 128.0 },
-    { text: "Kya mohabbat ho gayi hai", time: 132.5 },
-    { text: "Teri hi teri baatein kare", time: 137.0 },
-    { text: "📖", time: 141.5, isIcon: true },
-    { text: "Tere liye ghar banaau", time: 144.5 },
-    { text: "Deewaarein neele rang se sajaau", time: 149.0 },
-    { text: "Pasand hai tumhe, maloom hai", time: 153.5 },
-    { text: "Tumne bataya tha ek dafe", time: 158.0 },
-    { text: "🖋️", time: 162.5, isIcon: true },
-    { text: "Dekh shayar bana tere liye", time: 166.5 },
-    { text: "Nagma likha tere liye", time: 171.0 },
-    { text: "Mai khuda me maanu kyun", time: 175.5 },
-    { text: "Tu khuda mere liye ❤️", time: 180.0 },
-  ];
-
-  useEffect(() => {
-    // Adding Google Fonts
-    const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap';
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
-  }, []);
-
-  const handleStart = () => {
-    setIsStarted(true);
-    setIsPlaying(true);
-    if (audioRef.current) audioRef.current.play();
-  };
-
-  const handleScreenClick = (e) => {
-    const newClick = { id: Date.now(), x: e.clientX, y: e.clientY };
-    setClicks(prev => [...prev, newClick]);
-    setTimeout(() => setClicks(prev => prev.filter(c => c.id !== newClick.id)), 1000);
-  };
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    const handleTimeUpdate = () => {
-      const current = audio.currentTime;
-      setCurrentTime(current);
-      const index = lyrics.findLastIndex(l => current >= l.time);
-      if (index !== -1 && index !== activeLyricIndex) {
-        setActiveLyricIndex(index);
-      }
-    };
-    if (audio) {
-      audio.addEventListener('timeupdate', handleTimeUpdate);
-      return () => audio.removeEventListener('timeupdate', handleTimeUpdate);
-    }
-  }, [activeLyricIndex]);
-
-  const togglePlay = () => {
-    if (audioRef.current.paused) audioRef.current.play();
-    else audioRef.current.pause();
-    setIsPlaying(!audioRef.current.paused);
-  };
-
-  return (
-    <div 
-      className="min-h-screen bg-[#02040a] flex items-center justify-center p-6 overflow-hidden relative"
-      style={{ cursor: 'url("https://cur.cursors-4u.net/nature/nat-10/nat984.cur"), auto' }}
-      onClick={handleScreenClick}
-    >
-      {/* Click Particles */}
-      {clicks.map(click => (
-        <div 
-          key={click.id} 
-          className="fixed pointer-events-none z-50 animate-sparkle-pop"
-          style={{ left: click.x, top: click.y }}
-        >
-          <Star className="text-blue-400 fill-current w-4 h-4" />
-        </div>
-      ))}
-
-      {/* Aesthetic Background */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-full h-full bg-blue-900/10 blur-[120px] rounded-full"></div>
-        <div className="absolute bottom-0 right-0 w-64 h-64 bg-indigo-500/5 blur-[100px] rounded-full"></div>
-        
-        {/* Slow Moving Blue Stars */}
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute animate-twinkle bg-blue-300 rounded-full"
-            style={{
-              width: Math.random() * 3 + 'px',
-              height: Math.random() * 3 + 'px',
-              left: Math.random() * 100 + '%',
-              top: Math.random() * 100 + '%',
-              animationDelay: Math.random() * 5 + 's',
-              boxShadow: '0 0 10px #60a5fa'
-            }}
-          />
-        ))}
-      </div>
-
-      <audio ref={audioRef} src="http://googleusercontent.com/file_content/0" />
-
-      {!isStarted ? (
-        <div onClick={handleStart} className="z-10 text-center cursor-pointer animate-fade-in group">
-          <div className="relative mb-10 w-48 h-64 mx-auto perspective-1000">
-             <div className="w-full h-full bg-[#0a0f1d] border-2 border-blue-500/20 rounded-r-2xl flex flex-col items-center justify-center shadow-[20px_20px_50px_rgba(0,0,0,0.7)] group-hover:rotate-y-12 transition-transform duration-700">
-                <Feather className="w-12 h-12 text-blue-400 mb-4 animate-pulse" />
-                <span className="text-[10px] tracking-[0.5em] text-blue-200 uppercase font-bold">Diary</span>
-             </div>
-             <div className="absolute -inset-2 bg-blue-500/5 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-          </div>
-          <p className="font-['Playfair_Display'] italic text-blue-400/60 tracking-widest animate-bounce">Click to read my heart...</p>
-        </div>
-      ) : (
-        <div className="w-full max-w-4xl z-10 flex flex-col items-center gap-16 animate-page-reveal">
-          
-          {/* Lyrics Display Area */}
-          <div className="relative w-full h-64 flex flex-col items-center justify-center text-center">
-             {lyrics.map((line, idx) => {
-               const isActive = idx === activeLyricIndex;
-               const isPast = idx < activeLyricIndex;
-               
-               return (
-                 <div
-                   key={idx}
-                   className={`absolute w-full px-4 transition-all duration-1000 ease-out 
-                    ${isActive ? 'opacity-100 translate-y-0 filter-none scale-100' : 'opacity-0'}
-                    ${isPast ? '-translate-y-20 blur-md scale-90' : 'translate-y-20 blur-md scale-90'}
-                   `}
-                 >
-                    {line.isIcon ? (
-                      <div className="text-7xl animate-pulse drop-shadow-[0_0_20px_rgba(96,165,250,0.6)]">
-                         {line.text}
-                      </div>
-                    ) : (
-                      <div className="flex flex-col items-center gap-4">
-                        <h2 className="font-['Dancing_Script'] text-4xl md:text-7xl text-blue-50 drop-shadow-[0_4px_15px_rgba(0,0,0,0.8)] tracking-wide">
-                          {line.text}
-                        </h2>
-                        {isActive && (
-                          <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-blue-400 to-transparent animate-expand"></div>
-                        )}
-                      </div>
-                    )}
-                 </div>
-               );
-             })}
-          </div>
-
-          {/* Controls & Branding */}
-          <div className="flex flex-col items-center gap-8 w-full">
-             <div className="flex items-center gap-10">
-                <button onClick={() => window.location.reload()} className="text-blue-500/30 hover:text-blue-400 transition-colors">
-                   <RefreshCw className="w-5 h-5" />
-                </button>
-                
-                <button 
-                  onClick={togglePlay}
-                  className="w-20 h-20 bg-blue-600/5 border border-blue-500/30 rounded-full flex items-center justify-center text-blue-400 shadow-[0_0_30px_rgba(37,99,235,0.1)] hover:bg-blue-600/10 hover:scale-110 active:scale-95 transition-all"
-                >
-                  {isPlaying ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 ml-1 fill-current" />}
-                </button>
-
-                <div className="text-blue-500/30">
-                   <Heart className={`w-5 h-5 ${isPlaying ? 'text-red-400 animate-pulse fill-current' : ''}`} />
-                </div>
-             </div>
-
-             {/* Signature Style Credit */}
-             <div className="flex flex-col items-center gap-1 mt-4">
-                <div className="h-[1px] w-48 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent mb-4"></div>
-                <p className="font-['Dancing_Script'] text-xl text-blue-400/80 tracking-widest">
-                  Edit by <span className="text-blue-200 font-bold ml-1">Ft. Sumann</span>
-                </p>
-                <span className="font-['Playfair_Display'] text-[8px] uppercase tracking-[0.6em] text-blue-500/40">Pure Romance Experience</span>
-             </div>
-          </div>
-        </div>
-      )}
-
-      <style jsx>{`
+        /* Background Effects */
         @keyframes twinkle {
-          0%, 100% { opacity: 0.3; transform: scale(1); }
-          50% { opacity: 1; transform: scale(1.2); }
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.3); }
         }
-        .animate-twinkle { animation: twinkle 3s ease-in-out infinite; }
-        
-        @keyframes expand {
-          from { width: 0; opacity: 0; }
-          to { width: 96px; opacity: 1; }
-        }
-        .animate-expand { animation: expand 1s ease-out forwards; }
+        .star { position: absolute; background: #60a5fa; border-radius: 50%; animation: twinkle 3s ease-in-out infinite; }
 
+        /* Click Sparkle Animation */
         @keyframes sparkle-pop {
-          0% { transform: scale(0) rotate(0deg); opacity: 1; }
-          100% { transform: scale(2) rotate(180deg); opacity: 0; }
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            100% { transform: scale(2) rotate(180deg); opacity: 0; }
         }
-        .animate-sparkle-pop { animation: sparkle-pop 0.8s ease-out forwards; }
-
-        @keyframes page-reveal {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
+        .sparkle-particle { 
+            position: fixed; 
+            pointer-events: none; 
+            z-index: 100; 
+            color: #60a5fa; 
+            animation: sparkle-pop 0.8s ease-out forwards; 
         }
-        .animate-page-reveal { animation: page-reveal 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
 
-        @keyframes fade-in {
-          from { opacity: 0; }
-          to { opacity: 1; }
+        /* Lyrics Animation */
+        .lyric-active {
+            animation: lyric-enter 1s cubic-bezier(0.23, 1, 0.32, 1) forwards;
         }
-        .animate-fade-in { animation: fade-in 2s ease-in; }
+        @keyframes lyric-enter {
+            0% { opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(8px); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
 
-        .rotate-y-12 { transform: rotateY(15deg); }
+        /* Line Glow */
+        @keyframes expand-glow {
+            from { width: 0; opacity: 0; }
+            to { width: 120px; opacity: 1; }
+        }
+        .line-glow { 
+            animation: expand-glow 1.2s ease-out forwards;
+            background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+        }
+
         .perspective-1000 { perspective: 1000px; }
-      `}</style>
-    </div>
-  );
-};
+    </style>
+</head>
+<body>
+    <div id="root"></div>
 
-export default App;
+    <script type="text/babel">
+        const { useState, useRef, useEffect } = React;
+        const { Heart, Music, Play, Pause, RefreshCw, Sparkles, Star, Feather } = lucide;
+
+        const App = () => {
+            const [isStarted, setIsStarted] = useState(false);
+            const [isPlaying, setIsPlaying] = useState(false);
+            const [activeLyricIndex, setActiveLyricIndex] = useState(0);
+            const [clicks, setClicks] = useState([]);
+            const audioRef = useRef(null);
+
+            const lyrics = [
+                { text: "Kaagaz ke phool laau tere liye", time: 0 },
+                { text: "Khat likhu tere liye", time: 4.5 },
+                { text: "Mai khuda me maanu nahi", time: 9.0 },
+                { text: "Par maangu dua tere liye", time: 13.5 },
+                { text: "💙", time: 18.0, isIcon: true },
+                { text: "Tere liye ghar banaau", time: 21.0 },
+                { text: "Deewaarein neele rang se sajaau", time: 25.5 },
+                { text: "Pasand hai tumhe, maloom hai", time: 30.0 },
+                { text: "Tumne bataya tha ek dafe", time: 34.5 },
+                { text: "💠", time: 39.0, isIcon: true },
+                { text: "Neele phool laau tere liye", time: 41.5 },
+                { text: "Khat likhu tere liye", time: 46.0 },
+                { text: "Mai khuda me maanu nahi", time: 50.5 },
+                { text: "Par maangu dua tere liye", time: 55.0 },
+                { text: "✨", time: 59.5, isIcon: true },
+                { text: "Teri baatein nasamajh si phir bhi jaayaz lag rahi hai", time: 63.0 },
+                { text: "Tu pareshan kar rahi hai phir bhi masoom lag rahi hai", time: 71.5 },
+                { text: "Tere liye mandir jaaun", time: 80.5 },
+                { text: "Tere naam ka dia jalaaun", time: 85.0 },
+                { text: "Hasta rahe tu chaahe jo ho", time: 89.5 },
+                { text: "Teri hasi ko nazar na lage", time: 94.0 },
+                { text: "🧿", time: 98.5, isIcon: true },
+                { text: "Kaagaz ke phool laau tere liye", time: 102.0 },
+                { text: "Khat likhu tere liye", time: 106.5 },
+                { text: "Mai khuda me maanu nahi", time: 111.0 },
+                { text: "Par maangu dua tere liye...", time: 115.5 },
+                { text: "🌊", time: 120.0, isIcon: true },
+                { text: "Tere liye hum bane hai", time: 123.5 },
+                { text: "Tere liye badal rahe hai", time: 128.0 },
+                { text: "Kya mohabbat ho gayi hai", time: 132.5 },
+                { text: "Teri hi teri baatein kare", time: 137.0 },
+                { text: "📖", time: 141.5, isIcon: true },
+                { text: "Tere liye ghar banaau", time: 144.5 },
+                { text: "Deewaarein neele rang se sajaau", time: 149.0 },
+                { text: "Pasand hai tumhe, maloom hai", time: 153.5 },
+                { text: "Tumne bataya tha ek dafe", time: 158.0 },
+                { text: "🖋️", time: 162.5, isIcon: true },
+                { text: "Dekh shayar bana tere liye", time: 166.5 },
+                { text: "Nagma likha tere liye", time: 171.0 },
+                { text: "Mai khuda me maanu kyun", time: 175.5 },
+                { text: "Tu khuda mere liye ❤️", time: 180.0 },
+            ];
+
+            const spawnSparkle = (e) => {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle-particle';
+                sparkle.innerHTML = '✦';
+                sparkle.style.left = e.clientX + 'px';
+                sparkle.style.top = e.clientY + 'px';
+                document.body.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 800);
+            };
+
+            const handleStart = () => {
+                setIsStarted(true);
+                setIsPlaying(true);
+                if (audioRef.current) audioRef.current.play();
+            };
+
+            useEffect(() => {
+                const audio = audioRef.current;
+                const updateLyric = () => {
+                    const current = audio.currentTime;
+                    const index = lyrics.findLastIndex(l => current >= l.time);
+                    if (index !== -1 && index !== activeLyricIndex) {
+                        setActiveLyricIndex(index);
+                    }
+                };
+                if (audio) {
+                    audio.addEventListener('timeupdate', updateLyric);
+                    return () => audio.removeEventListener('timeupdate', updateLyric);
+                }
+            }, [activeLyricIndex]);
+
+            return (
+                <div className="min-h-screen w-full flex items-center justify-center p-6 relative overflow-hidden" onClick={spawnSparkle}>
+                    {/* Background Stars */}
+                    <div className="absolute inset-0 pointer-events-none opacity-40">
+                        {[...Array(30)].map((_, i) => (
+                            <div key={i} className="star w-0.5 h-0.5" 
+                                 style={{ left: Math.random()*100+'%', top: Math.random()*100+'%', animationDelay: Math.random()*5+'s' }}></div>
+                        ))}
+                    </div>
+
+                    <audio ref={audioRef} src="music.mp3" onEnded={() => setIsPlaying(false)} />
+
+                    {!isStarted ? (
+                        <div onClick={handleStart} className="z-10 text-center cursor-pointer group animate-fade-in">
+                            <div className="relative mb-10 w-48 h-64 mx-auto perspective-1000">
+                                <div className="w-full h-full bg-[#0a0f1d] border-2 border-blue-500/20 rounded-r-2xl flex flex-col items-center justify-center shadow-[0_0_40px_rgba(30,58,138,0.3)] group-hover:rotate-y-12 transition-all duration-700">
+                                    <Feather className="w-12 h-12 text-blue-400 mb-4 animate-pulse" />
+                                    <span className="text-[10px] tracking-[0.5em] text-blue-200 uppercase font-bold">Diary</span>
+                                </div>
+                            </div>
+                            <p className="italic text-blue-400/60 tracking-widest animate-bounce">Click to read my heart...</p>
+                        </div>
+                    ) : (
+                        <div className="w-full max-w-4xl z-10 flex flex-col items-center gap-16 animate-page-reveal text-center">
+                            
+                            <div className="relative w-full h-64 flex flex-col items-center justify-center">
+                                {lyrics.map((line, idx) => (
+                                    <div key={idx} className={`absolute w-full px-4 transition-all duration-1000 ${idx === activeLyricIndex ? 'lyric-active' : 'opacity-0 translate-y-10 blur-sm'}`}>
+                                        {line.isIcon ? (
+                                            <div className="text-8xl drop-shadow-xl">{line.text}</div>
+                                        ) : (
+                                            <div className="flex flex-col items-center gap-6">
+                                                <h2 className="cursive text-5xl md:text-8xl text-blue-50 drop-shadow-lg leading-tight">
+                                                    {line.text}
+                                                </h2>
+                                                {idx === activeLyricIndex && <div className="h-[1.5px] line-glow"></div>}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="flex flex-col items-center gap-10">
+                                <button onClick={(e) => {
+                                    e.stopPropagation();
+                                    if(audioRef.current.paused) { audioRef.current.play(); setIsPlaying(true); }
+                                    else { audioRef.current.pause(); setIsPlaying(false); }
+                                }} className="w-20 h-20 bg-blue-600/10 border border-blue-500/30 rounded-full flex items-center justify-center text-blue-400 hover:scale-110 transition-transform shadow-xl">
+                                    {isPlaying ? <Pause className="w-8 h-8 fill-current" /> : <Play className="w-8 h-8 ml-1 fill-current" />}
+                                </button>
+                                
+                                <div className="flex flex-col items-center gap-2">
+                                    <div className="h-[1px] w-48 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent mb-4"></div>
+                                    <p className="cursive text-3xl text-blue-400/80 tracking-widest">
+                                        Edit by <span className="text-blue-100 font-bold ml-1">Ft. Sumann</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
 
