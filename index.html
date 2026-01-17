@@ -3,51 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pure Romance Experience | Ft. Sumann</title>
-    
+    <title>Pure Romance Experience</title>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
-
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
-
-        body { margin: 0; padding: 0; background: #02040a; }
-
         @keyframes twinkle {
             0%, 100% { opacity: 0.3; transform: scale(1); }
             50% { opacity: 1; transform: scale(1.2); }
         }
         .animate-twinkle { animation: twinkle 3s ease-in-out infinite; }
-        
         @keyframes expand {
             from { width: 0; opacity: 0; }
             to { width: 96px; opacity: 1; }
         }
         .animate-expand { animation: expand 1s ease-out forwards; }
-
         @keyframes sparkle-pop {
             0% { transform: scale(0) rotate(0deg); opacity: 1; }
             100% { transform: scale(2) rotate(180deg); opacity: 0; }
         }
         .animate-sparkle-pop { animation: sparkle-pop 0.8s ease-out forwards; }
-
         @keyframes page-reveal {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-page-reveal { animation: page-reveal 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
-
         @keyframes fade-in {
             from { opacity: 0; }
             to { opacity: 1; }
         }
         .animate-fade-in { animation: fade-in 2s ease-in; }
-
-        .rotate-y-12 { transform: rotateY(15deg); }
         .perspective-1000 { perspective: 1000px; }
+        body { background-color: #02040a; margin: 0; overflow: hidden; }
     </style>
 </head>
 <body>
@@ -55,7 +45,6 @@
 
     <script type="text/babel">
         const { useState, useRef, useEffect } = React;
-        const { Heart, Music, Play, Pause, RefreshCw, Sparkles, Star, Feather } = lucide;
 
         const App = () => {
             const [isStarted, setIsStarted] = useState(false);
@@ -111,7 +100,8 @@
             const handleStart = () => {
                 setIsStarted(true);
                 setIsPlaying(true);
-                if (audioRef.current) audioRef.current.play().catch(e => console.log("Audio play failed", e));
+                // Note: Make sure the URL below is a direct link to your MP3 file
+                audioRef.current.play().catch(e => console.log("Audio play failed"));
             };
 
             const handleScreenClick = (e) => {
@@ -140,17 +130,13 @@
                 if (audioRef.current.paused) audioRef.current.play();
                 else audioRef.current.pause();
                 setIsPlaying(!audioRef.current.paused);
-            };
+            }
 
             return (
-                <div 
-                    className="min-h-screen bg-[#02040a] flex items-center justify-center p-6 overflow-hidden relative"
-                    style={{ cursor: 'url("https://cur.cursors-4u.net/nature/nat-10/nat984.cur"), auto' }}
-                    onClick={handleScreenClick}
-                >
+                <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden" onClick={handleScreenClick}>
                     {clicks.map(click => (
                         <div key={click.id} className="fixed pointer-events-none z-50 animate-sparkle-pop" style={{ left: click.x, top: click.y }}>
-                            <div className="text-blue-400 text-xl">★</div>
+                            <span className="text-blue-400 text-xl">★</span>
                         </div>
                     ))}
 
@@ -158,64 +144,44 @@
                         <div className="absolute top-[-10%] left-[-10%] w-full h-full bg-blue-900/10 blur-[120px] rounded-full"></div>
                         {[...Array(20)].map((_, i) => (
                             <div key={i} className="absolute animate-twinkle bg-blue-300 rounded-full"
-                                style={{
-                                    width: Math.random() * 3 + 'px',
-                                    height: Math.random() * 3 + 'px',
-                                    left: Math.random() * 100 + '%',
-                                    top: Math.random() * 100 + '%',
-                                    animationDelay: Math.random() * 5 + 's',
-                                    boxShadow: '0 0 10px #60a5fa'
-                                }}
+                                style={{ width: '2px', height: '2px', left: Math.random() * 100 + '%', top: Math.random() * 100 + '%', animationDelay: Math.random() * 5 + 's' }}
                             />
                         ))}
                     </div>
 
-                    <audio ref={audioRef} src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" />
+                    <audio ref={audioRef} src="YOUR_SONG_URL_HERE.mp3" loop />
 
                     {!isStarted ? (
                         <div onClick={handleStart} className="z-10 text-center cursor-pointer animate-fade-in group">
-                            <div className="relative mb-10 w-48 h-64 mx-auto perspective-1000">
-                                <div className="w-full h-full bg-[#0a0f1d] border-2 border-blue-500/20 rounded-r-2xl flex flex-col items-center justify-center shadow-[20px_20px_50px_rgba(0,0,0,0.7)] group-hover:rotate-y-12 transition-transform duration-700">
-                                    <span className="text-blue-400 text-5xl mb-4">✒️</span>
-                                    <span className="text-[10px] tracking-[0.5em] text-blue-200 uppercase font-bold">Diary</span>
-                                </div>
+                            <div className="w-48 h-64 mx-auto bg-[#0a0f1d] border-2 border-blue-500/20 rounded-r-2xl flex flex-col items-center justify-center shadow-2xl group-hover:scale-105 transition-transform">
+                                <span className="text-blue-400 text-4xl mb-4">✒️</span>
+                                <span className="text-[10px] tracking-[0.5em] text-blue-200 uppercase font-bold">Diary</span>
                             </div>
-                            <p className="font-['Playfair_Display'] italic text-blue-400/60 tracking-widest animate-bounce">Click to read my heart...</p>
+                            <p className="mt-8 font-['Playfair_Display'] italic text-blue-400/60 tracking-widest animate-bounce">Click to read my heart...</p>
                         </div>
                     ) : (
                         <div className="w-full max-w-4xl z-10 flex flex-col items-center gap-16 animate-page-reveal">
                             <div className="relative w-full h-64 flex flex-col items-center justify-center text-center">
-                                {lyrics.map((line, idx) => {
-                                    const isActive = idx === activeLyricIndex;
-                                    const isPast = idx < activeLyricIndex;
-                                    return (
-                                        <div key={idx} className={`absolute w-full px-4 transition-all duration-1000 ease-out 
-                                            ${isActive ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0'}
-                                            ${isPast ? '-translate-y-20 blur-md scale-90' : 'translate-y-20 blur-md scale-90'}`}>
-                                            {line.isIcon ? (
-                                                <div className="text-7xl animate-pulse drop-shadow-[0_0_20px_rgba(96,165,250,0.6)]">{line.text}</div>
-                                            ) : (
-                                                <div className="flex flex-col items-center gap-4">
-                                                    <h2 className="font-['Dancing_Script'] text-4xl md:text-7xl text-blue-50 drop-shadow-[0_4px_15px_rgba(0,0,0,0.8)] tracking-wide">{line.text}</h2>
-                                                    {isActive && <div className="w-24 h-[1px] bg-gradient-to-r from-transparent via-blue-400 to-transparent animate-expand"></div>}
-                                                </div>
-                                            )}
-                                        </div>
-                                    );
-                                })}
+                                {lyrics.map((line, idx) => (
+                                    <div key={idx} className={`absolute w-full px-4 transition-all duration-1000 ${idx === activeLyricIndex ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
+                                        {line.isIcon ? (
+                                            <div className="text-7xl animate-pulse">{line.text}</div>
+                                        ) : (
+                                            <div className="flex flex-col items-center gap-4">
+                                                <h2 className="font-['Dancing_Script'] text-4xl md:text-7xl text-blue-50 drop-shadow-lg">{line.text}</h2>
+                                                {idx === activeLyricIndex && <div className="w-24 h-[1px] bg-blue-400 animate-expand"></div>}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
                             </div>
-
-                            <div className="flex flex-col items-center gap-8 w-full">
-                                <div className="flex items-center gap-10">
-                                    <button onClick={(e) => { e.stopPropagation(); window.location.reload(); }} className="text-blue-500/30 hover:text-blue-400"><RefreshCw /></button>
-                                    <button onClick={togglePlay} className="w-20 h-20 bg-blue-600/5 border border-blue-500/30 rounded-full flex items-center justify-center text-blue-400 hover:bg-blue-600/10 transition-all">
-                                        {isPlaying ? "⏸" : "▶"}
-                                    </button>
-                                    <div className={`${isPlaying ? 'text-red-400 animate-pulse' : 'text-blue-500/30'}`}>❤</div>
-                                </div>
-                                <div className="flex flex-col items-center gap-1 mt-4">
-                                    <div className="h-[1px] w-48 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent mb-4"></div>
-                                    <p className="font-['Dancing_Script'] text-xl text-blue-400/80 tracking-widest">Edit by <span className="text-blue-200 font-bold ml-1">Ft. Sumann</span></p>
+                            
+                            <div className="flex flex-col items-center gap-6">
+                                <button onClick={togglePlay} className="w-20 h-20 rounded-full border border-blue-500/30 flex items-center justify-center text-blue-400 bg-blue-600/5 hover:bg-blue-600/10">
+                                    {isPlaying ? "||" : "▶"}
+                                </button>
+                                <div className="text-center">
+                                    <p className="font-['Dancing_Script'] text-xl text-blue-400/80">Edit by <span className="text-blue-200 font-bold">Ft. Sumann</span></p>
                                 </div>
                             </div>
                         </div>
