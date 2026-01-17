@@ -270,7 +270,8 @@
     <!-- Controls -->
     <div class="relative z-30 w-full max-w-sm px-6 mt-6">
         <div class="glass-panel p-6 flex flex-col gap-5">
-            <audio id="audio-player" src="tere-liye-mandir-jau-radhe-emotional-jaan-mysoul-tereliye-feelings-nightl_O0cfQE9s.mp3" preload="auto"></audio>
+            <!-- Changed src to simple 'song.mp3' -->
+            <audio id="audio-player" src="song.mp3" preload="auto"></audio>
             <input type="file" id="fallback-input" accept="audio/*" class="hidden">
 
             <button id="play-btn" class="play-btn w-full text-white font-serif tracking-wider font-bold py-4 px-6 rounded-full flex items-center justify-center gap-3 group">
@@ -296,9 +297,11 @@
         </div>
     </div>
 
-    <!-- Credit Text added here -->
-    <div class="z-20 mt-6 mb-4 opacity-70">
-        <p class="text-xs tracking-[0.2em] text-pink-200 font-light font-serif border-b border-pink-200/30 pb-1">Edit by ft.sumann</p>
+    <!-- Credit Text (Moved to Bottom Right) -->
+    <div class="fixed bottom-4 right-4 z-50 text-right opacity-70 pointer-events-none">
+        <p class="text-[10px] uppercase tracking-widest text-pink-200 font-light font-serif">
+            Edit by ft.sumann
+        </p>
     </div>
 
     <script>
