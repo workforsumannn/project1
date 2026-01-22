@@ -1,147 +1,377 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tere Liye - Experience</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <title>Annu Ka Magical World - Music Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #02040a; margin: 0; overflow: hidden; color: white; font-family: 'Playfair Display', serif; }
-        .animate-twinkle { animation: twinkle 3s ease-in-out infinite; }
-        @keyframes twinkle { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 1; transform: scale(1.2); } }
-        .animate-page-reveal { animation: reveal 1.5s ease-out forwards; }
-        @keyframes reveal { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .blur-text { filter: blur(8px); opacity: 0; transition: all 1s ease; }
-        .active-text { filter: blur(0); opacity: 1; transform: scale(1.05); transition: all 0.8s ease; }
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%, #e1f5fe 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="font-size: 20px;"><text y="16">✨</text></svg>'), auto;
+        }
+
+        .title-font { font-family: 'Dancing Script', cursive; }
+
+        .floating { animation: float 3s ease-in-out infinite; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* Particles */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: -1;
+            animation: moveUp 5s linear infinite;
+        }
+
+        @keyframes moveUp {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 30px;
+            transition: transform 0.3s ease;
+        }
+        .glass-card:hover { transform: translateY(-5px); }
+
+        .btn-magic {
+            background: linear-gradient(45deg, #ff4081, #f06292);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 15px rgba(255, 64, 129, 0.2);
+        }
+
+        .btn-magic:hover { transform: scale(1.05); box-shadow: 0 8px 25px rgba(255, 64, 129, 0.4); }
+
+        .love-meter-bar {
+            height: 16px; width: 0%; background: linear-gradient(90deg, #ff80ab, #ff4081, #ba68c8);
+            transition: width 2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Music Visualizer Animation */
+        .bar {
+            width: 4px; height: 10px; background: #ff4081; border-radius: 2px;
+            animation: bounce 0.5s ease-in-out infinite alternate;
+        }
+        @keyframes bounce {
+            from { height: 10px; }
+            to { height: 30px; }
+        }
+
+        .shake:hover { animation: shake 0.5s ease-in-out; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
     </style>
 </head>
-<body>
-    <div id="root"></div>
+<body class="flex flex-col items-center p-4 py-10" onclick="spawnClickEffect(event)">
 
-    <script type="text/babel">
-        const { useState, useRef, useEffect } = React;
+    <div id="particle-container"></div>
+    <div id="confetti-container"></div>
 
-        const App = () => {
-            const [isStarted, setIsStarted] = useState(false);
-            const [activeLyricIndex, setActiveLyricIndex] = useState(0);
-            const audioRef = useRef(null);
+    <!-- Header Section -->
+    <div class="max-w-md w-full glass-card p-8 shadow-2xl text-center relative z-10 mb-8 border-t-4 border-pink-400">
+        <h1 class="text-6xl title-font text-pink-600 mb-2 floating">Annu's World ✨</h1>
+        <p class="text-gray-500 italic font-medium">Music, Magic & Pure Happiness!</p>
+    </div>
 
-            // Exactly synced with the original 3:18 min track
-            const lyrics = [
-                { text: "🎸 (Music playing...)", time: 0, isIcon: true },
-                { text: "Kaagaz ke phool laau tere liye", time: 14.2 },
-                { text: "Khat likhu tere liye", time: 18.8 },
-                { text: "Mai khuda me maanu nahi", time: 23.4 },
-                { text: "Par maangu dua tere liye", time: 27.8 },
-                { text: "💙", time: 31.5, isIcon: true },
-                { text: "Tere liye ghar banaau", time: 34.0 },
-                { text: "Deewaarein neele rang se sajaau", time: 38.4 },
-                { text: "Pasand hai tumhe, maloom hai", time: 43.1 },
-                { text: "Tumne bataya tha ek dafe", time: 47.6 },
-                { text: "💠", time: 52.2, isIcon: true },
-                { text: "Neele phool laau tere liye", time: 54.8 },
-                { text: "Khat likhu tere liye", time: 59.3 },
-                { text: "Mai khuda me maanu nahi", time: 63.8 },
-                { text: "Par maangu dua tere liye", time: 68.4 },
-                { text: "🎸 (Music Solo)", time: 73.0, isIcon: true },
-                { text: "Teri baatein nasamajh si phir bhi jaayaz lag rahi hai", time: 77.2 },
-                { text: "Tu pareshan kar rahi hai phir bhi masoom lag rahi hai", time: 85.8 },
-                { text: "Tere liye mandir jaaun", time: 94.6 },
-                { text: "Tere naam ka dia jalaaun", time: 99.2 },
-                { text: "Hasta rahe tu chaahe jo ho", time: 103.8 },
-                { text: "Teri hasi ko nazar na lage", time: 108.3 },
-                { text: "🧿", time: 112.5, isIcon: true },
-                { text: "Kaagaz ke phool laau tere liye...", time: 115.8 },
-                { text: "Edit by Ft. Sumann", time: 185.0 }
-            ];
+    <!-- NEW: Music Player UI -->
+    <div class="max-w-md w-full glass-card p-6 shadow-xl text-center relative z-10 mb-8 border-l-8 border-pink-500">
+        <h3 class="text-pink-600 font-bold mb-4 text-xs tracking-widest uppercase">Annu's Favorite Track 🎵</h3>
+        <div class="flex items-center justify-center gap-4 mb-4">
+            <div id="visualizer" class="hidden flex items-end gap-1 h-10">
+                <div class="bar" style="animation-delay: 0.1s"></div>
+                <div class="bar" style="animation-delay: 0.3s"></div>
+                <div class="bar" style="animation-delay: 0.2s"></div>
+                <div class="bar" style="animation-delay: 0.4s"></div>
+            </div>
+            <button onclick="toggleMusic()" id="music-btn" class="w-16 h-16 rounded-full bg-pink-500 text-white flex items-center justify-center shadow-lg hover:scale-110 transition active:scale-95">
+                <span id="play-icon" class="text-2xl">▶️</span>
+            </button>
+        </div>
+        <p class="text-xs text-gray-400 italic">"Background music bajane ke liye click karein"</p>
+        <!-- AUDIO TAG: Replace 'music.mp3' with your file name -->
+        <audio id="bg-audio" loop>
+            <source src="music.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+    </div>
 
-            const handleStart = () => {
-                setIsStarted(true);
+    <!-- Secret Message Input -->
+    <div class="max-w-md w-full glass-card p-6 shadow-xl text-center relative z-10 mb-8">
+        <h3 class="text-pink-600 font-bold mb-3 uppercase text-xs tracking-tighter">Enter Secret Code 🤫</h3>
+        <input type="text" id="secret-input" placeholder="Hint: Tumhara naam..." class="w-full p-3 rounded-2xl border-2 border-pink-100 focus:border-pink-400 outline-none text-center mb-3 transition-all">
+        <button onclick="checkSecret()" class="btn-magic text-white px-8 py-2 rounded-full font-bold shadow-md">Unlock Magic</button>
+    </div>
+
+    <!-- Love Meter -->
+    <div class="max-w-md w-full glass-card p-6 shadow-xl text-center relative z-10 mb-8 overflow-hidden">
+        <h3 class="text-pink-600 font-bold mb-2">Happiness Meter 💖</h3>
+        <div class="w-full bg-gray-100 rounded-full h-4 mb-4 overflow-hidden shadow-inner">
+            <div id="love-bar" class="love-meter-bar rounded-full"></div>
+        </div>
+        <button onclick="startLoveMeter()" id="meter-btn" class="btn-magic text-white text-xs px-6 py-2 rounded-full font-bold uppercase">Check Today's Vibe</button>
+        <p id="meter-result" class="mt-2 font-bold text-pink-500 text-xl hidden animate-bounce">100% Awesome!</p>
+    </div>
+
+    <!-- Fortune & Tasks -->
+    <div class="max-w-md w-full grid grid-cols-2 gap-4 mb-8 relative z-10">
+        <div class="glass-card p-5 text-center flex flex-col items-center justify-center cursor-pointer shake" onclick="showFortune()">
+            <span class="text-4xl mb-2">🥠</span>
+            <p class="text-[10px] font-bold text-pink-600 uppercase">Fortune Cookie</p>
+        </div>
+        <div class="glass-card p-5 text-center flex flex-col items-center justify-center cursor-pointer shake" onclick="getDailyTask()">
+            <span class="text-4xl mb-2">🎯</span>
+            <p class="text-[10px] font-bold text-pink-600 uppercase">Magic Task</p>
+        </div>
+    </div>
+
+    <!-- NEW: Superpowers Section -->
+    <div class="max-w-md w-full glass-card p-6 shadow-xl text-center relative z-10 mb-8">
+        <h3 class="text-pink-600 font-bold mb-4 text-xs uppercase">Annu's Superpowers ⚡</h3>
+        <div class="flex flex-wrap justify-center gap-2">
+            <span class="bg-pink-100 text-pink-600 px-3 py-1 rounded-full text-xs font-semibold border border-pink-200">Killer Smile 😊</span>
+            <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold border border-blue-200">Infinite Cuteness 🥰</span>
+            <span class="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-xs font-semibold border border-purple-200">Angry Bird Mode 😡</span>
+            <span class="bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full text-xs font-semibold border border-yellow-200">Pure Gold Heart 💛</span>
+        </div>
+    </div>
+
+    <!-- Mood Checker -->
+    <div class="max-w-md w-full glass-card p-6 shadow-xl text-center relative z-10 mb-8">
+        <h3 class="text-pink-600 font-bold mb-4 text-sm uppercase">Current Mood?</h3>
+        <div class="flex justify-around">
+            <button onclick="setMood('Happy')" class="text-4xl hover:scale-125 transition grayscale hover:grayscale-0">😊</button>
+            <button onclick="setMood('Sad')" class="text-4xl hover:scale-125 transition grayscale hover:grayscale-0">🥺</button>
+            <button onclick="setMood('Tired')" class="text-4xl hover:scale-125 transition grayscale hover:grayscale-0">😴</button>
+        </div>
+        <p id="mood-response" class="mt-4 text-pink-400 font-medium text-sm italic min-h-[1.2rem]"></p>
+    </div>
+
+    <!-- NEW: Virtual Hug Button -->
+    <div class="max-w-md w-full mb-8 relative z-10">
+        <button onclick="sendHug()" class="w-full bg-white text-pink-500 py-4 rounded-3xl font-bold shadow-lg border-2 border-pink-200 hover:bg-pink-50 transition active:scale-95">
+            Send Virtual Hug! 🫂
+        </button>
+    </div>
+
+    <!-- Gift Section -->
+    <div class="max-w-md w-full glass-card p-8 shadow-2xl text-center relative z-10 mb-8">
+        <h3 class="text-pink-600 font-bold mb-6 uppercase text-xs tracking-widest">A Surprise Box 🎁</h3>
+        <div id="gift-area" class="relative h-24 flex items-center justify-center">
+            <div id="gift" class="w-20 h-20 bg-pink-500 rounded-lg shadow-lg flex items-center justify-center cursor-pointer transition-all hover:rotate-12" onclick="openGift()">
+                <div class="w-full h-3 bg-yellow-300 absolute"></div>
+                <div class="h-full w-3 bg-yellow-300 absolute"></div>
+                <span class="text-white font-bold z-10 text-xs">OPEN</span>
+            </div>
+            <div id="gift-content" class="hidden text-6xl animate-bounce">🍦</div>
+        </div>
+        <p id="gift-msg" class="mt-4 text-pink-500 font-bold hidden">Ek thandi ice-cream for the coolest girl!</p>
+    </div>
+
+    <!-- Final Secret Question -->
+    <div class="max-w-md w-full glass-card p-8 shadow-2xl text-center relative z-10 mb-20 border-b-8 border-pink-500">
+        <h3 class="text-lg font-bold text-pink-600 mb-6 leading-tight">Kya aap tayyar hain hamesha khush rehne ke liye?</h3>
+        <div class="flex gap-4 justify-center">
+            <button onclick="revealMessage('Haan')" class="btn-magic text-white px-8 py-3 rounded-2xl font-bold shadow-lg">Yes! ✨</button>
+            <button id="no-btn" onmouseover="moveNo()" class="bg-gray-300 text-gray-600 px-8 py-3 rounded-2xl font-bold">No 😜</button>
+        </div>
+    </div>
+
+    <!-- Custom Modal -->
+    <div id="custom-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-[1000]">
+        <div class="bg-white rounded-[35px] p-8 max-w-xs w-full text-center shadow-2xl border-t-8 border-pink-400">
+            <div id="modal-text" class="text-xl text-gray-700 mb-6 font-medium leading-relaxed"></div>
+            <button onclick="closeModal()" class="btn-magic text-white px-10 py-2 rounded-full font-bold shadow-md">Love it! ❤️</button>
+        </div>
+    </div>
+
+    <footer class="my-10 text-pink-800 text-xs font-bold opacity-60 tracking-tighter">
+        DESIGNED FOR ANNU'S SMILE ❤️
+    </footer>
+
+    <script>
+        // Data arrays
+        const fortunes = [
+            "Aaj aapka luck sabse top par hai! ✨",
+            "Kuch bohot achha hone wala hai aapke saath. 🌈",
+            "Aapki smile kisi ka din bana degi aaj! 😊",
+            "You are doing great, keep going! 🚀",
+            "Aaj aapko koi surprise mil sakta hai! 🎁"
+        ];
+
+        const tasks = [
+            "Smile for 10 seconds straight! 😁",
+            "Drink a glass of water right now! 💧",
+            "Mirror mein dekh kar bolo 'I am the best'! 🪞",
+            "Close your eyes and take 3 deep breaths. 🧘‍♀️",
+            "Listen to your favorite song and dance! 🎵"
+        ];
+
+        // Background Particles
+        function createParticle() {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const icons = ['❤️', '✨', '🌸', '💖', '⭐', '🎵', '🎶'];
+            p.innerHTML = icons[Math.floor(Math.random() * icons.length)];
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.fontSize = (Math.random() * 15 + 10) + 'px';
+            p.style.animationDuration = (Math.random() * 3 + 4) + 's';
+            p.style.opacity = Math.random() * 0.5 + 0.3;
+            document.getElementById('particle-container').appendChild(p);
+            setTimeout(() => p.remove(), 5000);
+        }
+        setInterval(createParticle, 500);
+
+        // Music Logic
+        function toggleMusic() {
+            const audio = document.getElementById('bg-audio');
+            const icon = document.getElementById('play-icon');
+            const vis = document.getElementById('visualizer');
+            
+            if (audio.paused) {
+                audio.play().catch(e => {
+                    alert("Pehle 'music.mp3' file add karein code mein! Tab tak enjoy the animations. 😉");
+                });
+                icon.innerText = '⏸️';
+                vis.classList.remove('hidden');
+            } else {
+                audio.pause();
+                icon.innerText = '▶️';
+                vis.classList.add('hidden');
+            }
+        }
+
+        // Virtual Hug Logic
+        function sendHug() {
+            for(let i=0; i<15; i++) {
                 setTimeout(() => {
-                    if(audioRef.current) {
-                        audioRef.current.play().catch(err => console.log("Play blocked"));
-                    }
-                }, 300);
-            };
+                    const hug = document.createElement('div');
+                    hug.className = 'fixed text-6xl pointer-events-none z-[100] animate-ping';
+                    hug.innerHTML = '🫂';
+                    hug.style.left = Math.random() * 80 + 10 + 'vw';
+                    hug.style.top = Math.random() * 80 + 10 + 'vh';
+                    document.body.appendChild(hug);
+                    setTimeout(() => hug.remove(), 1000);
+                }, i * 100);
+            }
+            launchConfetti();
+        }
 
-            useEffect(() => {
-                const audio = audioRef.current;
-                const handleTimeUpdate = () => {
-                    const current = audio.currentTime;
-                    const index = lyrics.findLastIndex(l => current >= l.time);
-                    if (index !== -1 && index !== activeLyricIndex) {
-                        setActiveLyricIndex(index);
-                    }
-                };
-                if (audio) {
-                    audio.addEventListener('timeupdate', handleTimeUpdate);
-                    return () => audio.removeEventListener('timeupdate', handleTimeUpdate);
-                }
-            }, [activeLyricIndex]);
+        // Click Effect
+        function spawnClickEffect(e) {
+            const effect = document.createElement('div');
+            effect.className = 'absolute pointer-events-none z-[100] text-2xl animate-ping';
+            effect.innerHTML = '💖';
+            effect.style.left = (e.pageX - 15) + 'px';
+            effect.style.top = (e.pageY - 15) + 'px';
+            document.body.appendChild(effect);
+            setTimeout(() => effect.remove(), 500);
+        }
 
-            return (
-                <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-[#02040a]">
-                    <audio ref={audioRef} src="music.mp3" />
-                    
-                    {/* Atmospheric Stars */}
-                    <div className="absolute inset-0 pointer-events-none">
-                        {[...Array(40)].map((_, i) => (
-                            <div key={i} className="absolute animate-twinkle bg-blue-500 rounded-full"
-                                style={{ 
-                                    width: Math.random() * 3 + 'px', height: Math.random() * 3 + 'px', 
-                                    left: Math.random() * 100 + '%', top: Math.random() * 100 + '%',
-                                    animationDelay: Math.random() * 5 + 's',
-                                    boxShadow: '0 0 8px rgba(59,130,246,0.8)'
-                                }}
-                            />
-                        ))}
-                    </div>
+        // Secret Input
+        function checkSecret() {
+            const val = document.getElementById('secret-input').value.toLowerCase().trim();
+            const modal = document.getElementById('custom-modal');
+            const mText = document.getElementById('modal-text');
+            
+            if(val === 'annu') {
+                mText.innerHTML = "Hi Annu! ❤️<br><br>Aapke liye ek baat: Aapki smile pure world mein sabse best hai! Gussa mat hua karo, smile karo! ✨";
+                modal.classList.remove('hidden');
+                launchConfetti();
+            } else {
+                alert("Wrong code! Hint: Aapka apna naam try karein. 😉");
+            }
+        }
 
-                    {!isStarted ? (
-                        <div onClick={handleStart} className="z-20 text-center cursor-pointer group">
-                            <div className="w-44 h-60 mx-auto bg-gradient-to-b from-blue-900/20 to-black border border-blue-400/30 rounded-r-[40px] shadow-[0_0_40px_rgba(30,58,138,0.4)] flex flex-col items-center justify-center transition-all duration-700 group-hover:rotate-y-12 group-hover:scale-105">
-                                <span className="text-blue-300 text-5xl mb-4 opacity-80">🖋️</span>
-                                <span className="text-[10px] tracking-[0.6em] text-blue-200 font-bold uppercase">Open Diary</span>
-                            </div>
-                            <p className="mt-10 font-['Playfair_Display'] italic text-blue-400/50 tracking-[0.2em] animate-pulse">Tap to feel the music...</p>
-                        </div>
-                    ) : (
-                        <div className="w-full max-w-5xl z-10 flex flex-col items-center animate-page-reveal">
-                            <div className="relative h-80 flex items-center justify-center text-center w-full">
-                                {lyrics.map((line, idx) => (
-                                    <div key={idx} 
-                                         className={`absolute w-full px-8 transition-all duration-1000 
-                                         ${idx === activeLyricIndex ? 'active-text' : 'blur-text translate-y-10'}`}>
-                                        {line.isIcon ? (
-                                            <div className="text-8xl filter drop-shadow-[0_0_30px_rgba(59,130,246,0.6)] animate-pulse">
-                                                {line.text}
-                                            </div>
-                                        ) : (
-                                            <h2 className="font-['Dancing_Script'] text-5xl md:text-8xl text-blue-50 tracking-wide leading-tight">
-                                                {line.text}
-                                            </h2>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                            
-                            {/* Footer Credit */}
-                            <div className="mt-24 opacity-40">
-                                <div className="h-[1px] w-32 bg-gradient-to-r from-transparent via-blue-400 to-transparent mx-auto mb-4"></div>
-                                <p className="font-['Dancing_Script'] text-2xl text-blue-200">Ft. Sumann</p>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            );
-        };
+        // Other features
+        function showFortune() {
+            const mText = document.getElementById('modal-text');
+            mText.innerText = fortunes[Math.floor(Math.random() * fortunes.length)];
+            document.getElementById('custom-modal').classList.remove('hidden');
+            launchConfetti();
+        }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        function getDailyTask() {
+            const mText = document.getElementById('modal-text');
+            mText.innerText = "Aaj ka Magic Task: " + tasks[Math.floor(Math.random() * tasks.length)];
+            document.getElementById('custom-modal').classList.remove('hidden');
+        }
+
+        function launchConfetti() {
+            for (let i = 0; i < 50; i++) {
+                const c = document.createElement('div');
+                c.className = 'fixed w-2 h-2 z-[100]';
+                c.style.backgroundColor = ['#ff4081', '#ffd54f', '#4fc3f7', '#ba68c8'][Math.floor(Math.random() * 4)];
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.top = '-10px';
+                c.style.transition = 'transform 3s linear, opacity 3s';
+                document.body.appendChild(c);
+                setTimeout(() => {
+                    c.style.transform = `translate(${Math.random() * 100 - 50}px, 100vh) rotate(${Math.random() * 360}deg)`;
+                    c.style.opacity = '0';
+                }, 10);
+                setTimeout(() => c.remove(), 3000);
+            }
+        }
+
+        function startLoveMeter() {
+            const bar = document.getElementById('love-bar');
+            const res = document.getElementById('meter-result');
+            bar.style.width = "100%";
+            setTimeout(() => {
+                res.classList.remove('hidden');
+                launchConfetti();
+            }, 2000);
+        }
+
+        function setMood(mood) {
+            const resp = document.getElementById('mood-response');
+            let t = (mood === 'Happy') ? "Duniya ki sabse pyari smile! ✨" : 
+                    (mood === 'Sad') ? "Sad mat ho, Annu! Main hoon na! 🍫" : 
+                    "Princess, thoda aaram kar lo! 😴";
+            resp.innerText = t;
+        }
+
+        function openGift() {
+            document.getElementById('gift').style.transform = 'scale(0) rotate(180deg)';
+            setTimeout(() => {
+                document.getElementById('gift').classList.add('hidden');
+                document.getElementById('gift-content').classList.remove('hidden');
+                document.getElementById('gift-msg').classList.remove('hidden');
+                launchConfetti();
+            }, 300);
+        }
+
+        function revealMessage(choice) {
+            const mText = document.getElementById('modal-text');
+            mText.innerText = "YAY! Aapne YES bola! Ab se aapki life mein sirf smile hogi! I promise! ❤️✨";
+            document.getElementById('custom-modal').classList.remove('hidden');
+            launchConfetti();
+        }
+
+        function closeModal() { document.getElementById('custom-modal').classList.add('hidden'); }
+
+        function moveNo() {
+            const btn = document.getElementById('no-btn');
+            btn.style.position = 'fixed';
+            btn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
+            btn.style.top = Math.random() * (window.innerHeight - 50) + 'px';
+            btn.style.zIndex = '1000';
+        }
     </script>
 </body>
 </html>
