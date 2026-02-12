@@ -255,8 +255,36 @@
         const bgMusic = new Audio('music.mp3'); 
         bgMusic.loop = true;
 
-        // Start hearts immediately
-        createFloatingHearts();
+        // Unified Autoplay Trigger
+        const triggerMusic = () => {
+            if (!isMusicPlaying) {
+                bgMusic.play().then(() => {
+                    isMusicPlaying = true;
+                    document.getElementById('musicBtn').classList.add('music-playing');
+                    document.getElementById('musicIcon').className = 'fas fa-pause text-black';
+                }).catch(e => console.log("Music play blocked, waiting for user click..."));
+            }
+        };
+
+        // Listen for first interaction to start music
+        document.body.addEventListener('click', triggerMusic, { once: true });
+        document.body.addEventListener('touchstart', triggerMusic, { once: true });
+
+        window.toggleMusic = (e) => {
+            if(e) e.stopPropagation(); // Stop triggerMusic from interfering
+            const btn = document.getElementById('musicBtn');
+            const icon = document.getElementById('musicIcon');
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                btn.classList.remove('music-playing');
+                icon.className = 'fas fa-music text-black';
+            } else {
+                bgMusic.play().catch(e => console.warn("Audio blocked", e));
+                btn.classList.add('music-playing');
+                icon.className = 'fas fa-pause text-black';
+            }
+            isMusicPlaying = !isMusicPlaying;
+        };
 
         // Hearts Generator
         function createFloatingHearts() {
@@ -278,73 +306,55 @@
                 setTimeout(() => heart.remove(), duration * 1000);
             }, 600);
         }
+        createFloatingHearts();
 
-        // Auto-play trigger: starts on very first interaction
-        const startAutoPlay = () => {
-            if (!isMusicPlaying) {
-                bgMusic.play().then(() => {
-                    isMusicPlaying = true;
-                    document.getElementById('musicBtn').classList.add('music-playing');
-                    document.getElementById('musicIcon').className = 'fas fa-pause text-black';
-                }).catch(e => console.log("Interaction needed..."));
-            }
-            window.removeEventListener('click', startAutoPlay);
-            window.removeEventListener('touchstart', startAutoPlay);
-        };
-
-        window.addEventListener('click', startAutoPlay);
-        window.addEventListener('touchstart', startAutoPlay);
-
-        window.toggleMusic = () => {
-            const btn = document.getElementById('musicBtn');
-            const icon = document.getElementById('musicIcon');
-            if (isMusicPlaying) {
-                bgMusic.pause();
-                btn.classList.remove('music-playing');
-                icon.className = 'fas fa-music text-black';
-            } else {
-                bgMusic.play().catch(e => console.warn("Audio blocked", e));
-                btn.classList.add('music-playing');
-                icon.className = 'fas fa-pause text-black';
-            }
-            isMusicPlaying = !isMusicPlaying;
-        };
-
+        // --- SUBMISSION & SEND LOGIC ---
         window.sendPromise = async (text) => {
-            startAutoPlay();
-            if (!user) return;
-            try {
-                const textArea = document.createElement("textarea");
-                textArea.value = text;
-                textArea.style.position = "fixed";
-                textArea.style.left = "-9999px";
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-                try { document.execCommand('copy'); } catch (err) { }
-                document.body.removeChild(textArea);
+            triggerMusic(); // Backup trigger
+            
+            // 1. Copy to clipboard (Immediate)
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
 
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'promises'), {
-                    text: text,
-                    userId: user.uid,
-                    timestamp: serverTimestamp()
-                });
+            showNotif();
+            spawnSparkles(window.innerWidth/2, window.innerHeight/2);
 
-                spawnSparkles(window.innerWidth/2, window.innerHeight/2);
-                showNotif();
+            // 2. Redirect IMMEDIATELY to avoid browser popup blocks
+            // Note: window.open in some environments fails after async calls, 
+            // so we do it fast.
+            setTimeout(() => {
+                window.location.href = 'https://www.snapchat.com/add/ft.sumann';
+            }, 1000);
 
-                setTimeout(() => {
-                    window.open('https://www.snapchat.com/add/ft.sumann', '_blank');
-                }, 2000);
-            } catch (e) { console.error("Error:", e); }
+            // 3. Save to Firebase (Async)
+            if (user) {
+                try {
+                    await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'promises'), {
+                        text: text,
+                        userId: user.uid,
+                        timestamp: serverTimestamp()
+                    });
+                } catch (e) { console.error("Firebase Error:", e); }
+            }
         };
 
         window.handleCustomSubmit = () => {
             const input = document.getElementById('mainInput');
             const val = input.value.trim();
-            if(val) { window.sendPromise(val); input.value = ''; }
+            if(val) { 
+                window.sendPromise(val); 
+                input.value = ''; 
+            }
         };
 
+        // --- FIREBASE INIT ---
         const initAuth = async () => {
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -359,7 +369,6 @@
         onAuthStateChanged(auth, (u) => { user = u; if (user) loadPromises(); });
 
         function loadPromises() {
-            if (!user) return;
             const promiseCollection = collection(db, 'artifacts', appId, 'public', 'data', 'promises');
             onSnapshot(promiseCollection, (snapshot) => {
                 const list = document.getElementById('promiseList');
@@ -379,7 +388,7 @@
                     list.appendChild(item);
                 });
                 list.scrollTop = list.scrollHeight;
-            });
+            }, (err) => console.log("Firestore error:", err));
         }
 
         function showNotif() {
