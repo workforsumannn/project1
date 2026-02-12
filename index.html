@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suman Snapchat Family - Promise Day ✨</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+        :root {
+            --snap-yellow: #FFFC00;
+            --snap-blue: #00AEFF;
+            --snap-purple: #9b51e0;
+            --insta-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #FFFC00;
+            background: linear-gradient(180deg, #FFFC00 0%, #ff9a9e 50%, #fbc2eb 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #1a1a1a;
+        }
+
+        .mesh-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            background-color: #FFFC00;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            opacity: 0.15;
+            filter: blur(100px);
+        }
+
+        .glass-premium {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(25px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 45px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .avatar-aura {
+            position: relative;
+            padding: 8px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #FFFC00, #ff4d4d, #9b51e0, #00AEFF, #FFFC00);
+            animation: rotateAura 4s linear infinite;
+        }
+
+        @keyframes rotateAura {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .profile-pic-container {
+            background: black;
+            border-radius: 50%;
+            width: 110px;
+            height: 110px;
+            display: flex;
+            align-items: center; justify-content: center;
+            border: 4px solid white;
+            position: relative; z-index: 2;
+        }
+
+        .social-badge {
+            color: white; padding: 6px 12px; border-radius: 20px;
+            font-size: 10px; font-weight: 800; border: 2px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s ease;
+        }
+
+        .insta-badge { background: var(--insta-gradient); }
+        .snap-badge { background: black; color: var(--snap-yellow); }
+
+        .chat-bubble {
+            animation: slideUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+            border-left: 4px solid #FFFC00;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .music-toggle {
+            position: fixed; top: 20px; right: 20px;
+            width: 45px; height: 45px; background: white;
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; shadow: 0 10px 20px rgba(0,0,0,0.1);
+            z-index: 100; border: 2px solid black; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .music-playing { animation: pulseMusic 1.5s infinite; }
+        @keyframes pulseMusic {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 252, 0, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 252, 0, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 252, 0, 0); }
+        }
+
+        .floating-heart {
+            position: fixed;
+            bottom: -50px;
+            font-size: 20px;
+            color: rgba(255, 59, 132, 0.6);
+            pointer-events: none;
+            z-index: 0;
+            animation: floatUp linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+        }
+
+        .sparkle {
+            position: absolute; pointer-events: none;
+            animation: sparkleAnim 1s linear forwards;
+        }
+
+        @keyframes sparkleAnim {
+            0% { transform: translate(0, 0) scale(0); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(1); opacity: 0; }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.1); border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="p-4 flex flex-col items-center pb-20" onclick="handleGlobalClick()">
+
+    <div class="mesh-bg"></div>
+    <div id="hearts-container" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <!-- Music Toggle Button -->
+    <div id="musicBtn" class="music-toggle" onclick="toggleMusic(event)">
+        <i id="musicIcon" class="fas fa-music text-black"></i>
+    </div>
+
+    <!-- Top Social Navigation -->
+    <div class="z-20 w-full max-w-md flex flex-col space-y-3 mt-4 px-2">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-3 bg-black/90 text-white px-5 py-2.5 rounded-full shadow-2xl border border-white/20">
+                <i class="fas fa-fire text-orange-400 animate-pulse"></i>
+                <span class="text-xs font-black tracking-widest uppercase">999+ Streak</span>
+            </div>
+            <div class="flex space-x-2">
+                <a href="https://instagram.com/Sumannnuc" target="_blank" class="social-badge insta-badge"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.snapchat.com/add/ft.sumann" target="_blank" class="social-badge snap-badge"><i class="fab fa-snapchat-ghost"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Header -->
+    <div class="z-10 text-center mb-10 mt-8">
+        <div class="inline-block relative">
+            <div class="avatar-aura">
+                <div class="profile-pic-container">
+                    <i class="fab fa-snapchat text-6xl text-yellow-400"></i>
+                </div>
+            </div>
+            <div class="absolute -top-2 -right-2 bg-pink-500 text-white w-8 h-8 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
+                <i class="fas fa-heart text-[10px]"></i>
+            </div>
+        </div>
+        
+        <div class="mt-6 px-4">
+            <h1 class="text-3xl font-extrabold text-black uppercase leading-tight tracking-[0.3em] mb-2 drop-shadow-sm">HAPPY PROMISE DAY</h1>
+            <div class="flex flex-col items-center space-y-1 mt-2">
+                <div class="flex items-center space-x-2">
+                    <span class="text-[10px] font-black text-black/40 tracking-widest uppercase">Snap: @ft.sumann</span>
+                    <div class="w-1 h-1 rounded-full bg-black/20"></div>
+                    <span class="text-[10px] font-black text-black/40 tracking-widest uppercase">Insta: @Sumannnuc</span>
+                </div>
+                <div class="mt-1">
+                    <span class="text-[10px] font-extrabold text-gray-500 uppercase tracking-[0.4em] block">SUMAN SNAPCHAT FAMILY</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interaction Card -->
+    <div class="z-10 w-full max-w-md glass-premium p-8 space-y-8">
+        <div class="text-center space-y-2">
+            <h2 class="text-xl font-black text-gray-800">Send Your Promise... 🤞</h2>
+            <p class="text-sm font-medium text-gray-600 leading-relaxed italic">"Your promise will be copied automatically, just paste it in DM!"</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="sendPromise('Always Online for You! ⚡️')" class="bg-white/80 p-4 rounded-[25px] text-center hover:bg-yellow-400 transition-all active:scale-95 shadow-sm">
+                <span class="block text-xl mb-1">⚡️</span>
+                <span class="text-[10px] font-black uppercase">Instant Reply</span>
+            </button>
+            <button onclick="sendPromise('Besties Forever & Always! ❤️')" class="bg-white/80 p-4 rounded-[25px] text-center hover:bg-pink-400 hover:text-white transition-all active:scale-95 shadow-sm">
+                <span class="block text-xl mb-1">❤️</span>
+                <span class="text-[10px] font-black uppercase">Forever Bond</span>
+            </button>
+        </div>
+
+        <div class="relative pt-2">
+            <div class="flex flex-col space-y-3">
+                <input type="text" id="mainInput" placeholder="Write a promise for Suman..." 
+                       class="w-full bg-white/60 border-2 border-transparent py-5 px-6 rounded-[30px] font-bold text-sm outline-none transition-all placeholder:text-gray-400 text-black shadow-inner focus:border-black/10">
+                <button id="sendBtn" onclick="handleCustomSubmit()" class="w-full bg-black text-white py-4 rounded-[25px] font-black text-sm tracking-widest hover:bg-yellow-400 hover:text-black transition-all shadow-xl active:scale-95 flex items-center justify-center space-x-2">
+                    <span>SEND DIRECT MESSAGE TO SUMAN</span>
+                    <i class="fab fa-snapchat-ghost text-xs"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="feedSection" class="pt-4 border-t border-black/5">
+            <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4 text-center">Fam Wall (Live)</h4>
+            <div id="promiseList" class="space-y-4 max-h-72 overflow-y-auto pr-2 custom-scrollbar flex flex-col-reverse"></div>
+        </div>
+    </div>
+
+    <!-- Bottom Disclaimer -->
+    <div class="z-10 mt-12 mb-10 text-center opacity-50 px-6">
+        <p class="text-[11px] font-bold tracking-[0.1em] text-black/60 italic leading-relaxed">
+            "Created for entertainment purposes only, please don't take it seriously."
+        </p>
+    </div>
+
+    <div id="notif" class="fixed top-10 left-1/2 -translate-x-1/2 z-[200] bg-black text-yellow-400 px-8 py-3 rounded-full font-black text-xs tracking-widest shadow-2xl opacity-0 translate-y-[-20px] transition-all duration-500 text-center pointer-events-none">
+        PROMISE COPIED! PASTE IN DM 🔒
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Setup
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'suman-snap-fam-v4';
+
+        let user = null;
+        let isMusicPlaying = false;
+        
+        // Music Initialization
+        const bgMusic = new Audio('music.mp3'); 
+        bgMusic.loop = true;
+
+        // Auto-play Logic: Force music to play on first interaction
+        window.handleGlobalClick = () => {
+            if (!isMusicPlaying) {
+                bgMusic.play().then(() => {
+                    isMusicPlaying = true;
+                    document.getElementById('musicBtn').classList.add('music-playing');
+                    document.getElementById('musicIcon').className = 'fas fa-pause text-black';
+                }).catch(e => console.log("Music awaiting interaction..."));
+            }
+        };
+
+        window.toggleMusic = (e) => {
+            if(e) e.stopPropagation();
+            const btn = document.getElementById('musicBtn');
+            const icon = document.getElementById('musicIcon');
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                btn.classList.remove('music-playing');
+                icon.className = 'fas fa-music text-black';
+                isMusicPlaying = false;
+            } else {
+                bgMusic.play().catch(e => console.warn("Audio blocked", e));
+                btn.classList.add('music-playing');
+                icon.className = 'fas fa-pause text-black';
+                isMusicPlaying = true;
+            }
+        };
+
+        // Hearts Animation
+        function createFloatingHearts() {
+            const container = document.getElementById('hearts-container');
+            if(!container) return;
+            setInterval(() => {
+                const heart = document.createElement('i');
+                heart.className = 'fas fa-heart floating-heart';
+                const startPos = Math.random() * 100;
+                const duration = 5 + Math.random() * 10;
+                const size = 10 + Math.random() * 20;
+                heart.style.left = startPos + 'vw';
+                heart.style.animationDuration = duration + 's';
+                heart.style.fontSize = size + 'px';
+                heart.style.opacity = 0.2 + Math.random() * 0.4;
+                container.appendChild(heart);
+                setTimeout(() => heart.remove(), duration * 1000);
+            }, 600);
+        }
+        createFloatingHearts();
+
+        // SUBMISSION & REDIRECT LOGIC
+        window.sendPromise = async (text) => {
+            // Backup Music Trigger
+            if (!isMusicPlaying) bgMusic.play().catch(() => {});
+
+            // 1. Copy to clipboard (Immediate)
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+
+            showNotif();
+            spawnSparkles(window.innerWidth/2, window.innerHeight/2);
+
+            // 2. Immediate Start: Save to Firebase
+            if (user) {
+                try {
+                    addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'promises'), {
+                        text: text,
+                        userId: user.uid,
+                        timestamp: serverTimestamp()
+                    });
+                } catch (e) { console.error("Firebase Error:", e); }
+            }
+
+            // 3. Redirection (Small delay to show notif)
+            setTimeout(() => {
+                window.location.href = 'https://www.snapchat.com/add/ft.sumann';
+            }, 1200);
+        };
+
+        window.handleCustomSubmit = () => {
+            const input = document.getElementById('mainInput');
+            const val = input.value.trim();
+            if(val) { 
+                window.sendPromise(val); 
+                input.value = ''; 
+            }
+        };
+
+        // Firebase Auth
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) { console.error("Auth failed:", error); }
+        };
+
+        initAuth();
+        onAuthStateChanged(auth, (u) => { 
+            user = u; 
+            if (user) loadPromises(); 
+        });
+
+        function loadPromises() {
+            if (!user) return;
+            const promiseCollection = collection(db, 'artifacts', appId, 'public', 'data', 'promises');
+            onSnapshot(promiseCollection, (snapshot) => {
+                const list = document.getElementById('promiseList');
+                if(!list) return;
+                list.innerHTML = '';
+                const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                const sorted = docs.sort((a, b) => (a.timestamp?.seconds || 0) - (b.timestamp?.seconds || 0));
+                sorted.forEach(data => {
+                    const item = document.createElement('div');
+                    item.className = "chat-bubble bg-white/90 p-5 rounded-[28px] rounded-bl-none shadow-sm border-l-4 border-yellow-400";
+                    item.innerHTML = `
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[9px] font-black text-purple-600 uppercase tracking-widest">Snap Fam Member</span>
+                        </div>
+                        <p class="text-sm font-bold text-gray-800">${data.text}</p>
+                    `;
+                    list.appendChild(item);
+                });
+                list.scrollTop = list.scrollHeight;
+            }, (err) => console.log("Firestore error:", err));
+        }
+
+        function showNotif() {
+            const el = document.getElementById('notif');
+            if(!el) return;
+            el.style.opacity = '1'; el.style.transform = 'translate(-50%, 0)';
+            setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translate(-50%, -20px)'; }, 4000);
+        }
+
+        function spawnSparkles(x, y) {
+            for(let i=0; i<15; i++) {
+                const s = document.createElement('div');
+                s.className = 'sparkle';
+                s.innerHTML = ['✨', '⭐', '💛', '🤞'][Math.floor(Math.random()*4)];
+                s.style.left = x + 'px'; s.style.top = y + 'px';
+                s.style.setProperty('--tx', (Math.random()-0.5)*300 + 'px');
+                s.style.setProperty('--ty', (Math.random()-0.5)*300 + 'px');
+                document.body.appendChild(s);
+                setTimeout(() => s.remove(), 1000);
+            }
+        }
+    </script>
+</body>
+</html>
