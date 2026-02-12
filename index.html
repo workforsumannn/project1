@@ -26,7 +26,8 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: all;
         }
 
         .loader-content {
@@ -179,7 +180,7 @@
 </head>
 <body class="p-4 flex flex-col items-center pb-20">
 
-    <!-- Preloader without Counter -->
+    <!-- Preloader -->
     <div id="preloader">
         <div class="loader-content flex flex-col items-center">
             <div class="relative inline-block mb-4">
@@ -304,23 +305,33 @@
         const bgMusic = new Audio('music.mp3'); 
         bgMusic.loop = true;
 
-        // Preloader Logic (No percentage counter)
-        window.addEventListener('load', () => {
+        // Preloader Logic - Robust Version
+        const hidePreloader = () => {
             const preloader = document.getElementById('preloader');
-            // Show preloader for 2.5 seconds for a premium feel
-            setTimeout(() => {
+            if (preloader && preloader.style.visibility !== 'hidden') {
                 preloader.style.opacity = '0';
                 setTimeout(() => {
                     preloader.style.visibility = 'hidden';
+                    preloader.style.pointerEvents = 'none';
                 }, 800);
-            }, 2500);
+            }
+        };
 
-            createFloatingHearts();
+        // Window load event might be delayed if assets are missing
+        window.addEventListener('load', () => {
+            setTimeout(hidePreloader, 2000); // Wait for premium feel
         });
+
+        // Fallback: Force hide after 4 seconds regardless of load event
+        setTimeout(hidePreloader, 4000);
+
+        // Start hearts
+        createFloatingHearts();
 
         // Hearts Generator
         function createFloatingHearts() {
             const container = document.getElementById('hearts-container');
+            if(!container) return;
             setInterval(() => {
                 const heart = document.createElement('i');
                 heart.className = 'fas fa-heart floating-heart';
@@ -422,6 +433,7 @@
             const promiseCollection = collection(db, 'artifacts', appId, 'public', 'data', 'promises');
             onSnapshot(promiseCollection, (snapshot) => {
                 const list = document.getElementById('promiseList');
+                if(!list) return;
                 list.innerHTML = '';
                 const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 const sorted = docs.sort((a, b) => (a.timestamp?.seconds || 0) - (b.timestamp?.seconds || 0));
@@ -442,6 +454,7 @@
 
         function showNotif() {
             const el = document.getElementById('notif');
+            if(!el) return;
             el.style.opacity = '1'; el.style.transform = 'translate(-50%, 0)';
             setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translate(-50%, -20px)'; }, 4000);
         }
