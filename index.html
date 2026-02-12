@@ -16,45 +16,6 @@
             --insta-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
         }
 
-        /* Preloader Styles */
-        #preloader {
-            position: fixed;
-            inset: 0;
-            background: var(--snap-yellow);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: all;
-        }
-
-        .loader-content {
-            text-align: center;
-        }
-
-        .loader-ghost {
-            font-size: 70px;
-            color: black;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
-            animation: bounceLoader 2s infinite ease-in-out;
-        }
-
-        @keyframes bounceLoader {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        .loader-text {
-            margin-top: 15px;
-            font-weight: 800;
-            letter-spacing: 0.4em;
-            font-size: 14px;
-            color: black;
-            text-transform: uppercase;
-        }
-
         body {
             font-family: 'Outfit', sans-serif;
             background: #FFFC00;
@@ -180,17 +141,6 @@
 </head>
 <body class="p-4 flex flex-col items-center pb-20">
 
-    <!-- Preloader -->
-    <div id="preloader">
-        <div class="loader-content flex flex-col items-center">
-            <div class="relative inline-block mb-4">
-                <i class="fab fa-snapchat loader-ghost"></i>
-                <i class="fas fa-heart absolute -top-2 -right-2 text-red-500 text-2xl animate-pulse"></i>
-            </div>
-            <p class="loader-text">SNAPCHAT</p>
-        </div>
-    </div>
-
     <div class="mesh-bg"></div>
     <div id="hearts-container" class="fixed inset-0 pointer-events-none z-0"></div>
 
@@ -305,27 +255,7 @@
         const bgMusic = new Audio('music.mp3'); 
         bgMusic.loop = true;
 
-        // Preloader Logic - Robust Version
-        const hidePreloader = () => {
-            const preloader = document.getElementById('preloader');
-            if (preloader && preloader.style.visibility !== 'hidden') {
-                preloader.style.opacity = '0';
-                setTimeout(() => {
-                    preloader.style.visibility = 'hidden';
-                    preloader.style.pointerEvents = 'none';
-                }, 800);
-            }
-        };
-
-        // Window load event might be delayed if assets are missing
-        window.addEventListener('load', () => {
-            setTimeout(hidePreloader, 2000); // Wait for premium feel
-        });
-
-        // Fallback: Force hide after 4 seconds regardless of load event
-        setTimeout(hidePreloader, 4000);
-
-        // Start hearts
+        // Start hearts immediately
         createFloatingHearts();
 
         // Hearts Generator
@@ -349,7 +279,7 @@
             }, 600);
         }
 
-        // Auto-play trigger
+        // Auto-play trigger: starts on very first interaction
         const startAutoPlay = () => {
             if (!isMusicPlaying) {
                 bgMusic.play().then(() => {
