@@ -16,6 +16,44 @@
             --insta-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
         }
 
+        /* Preloader Styles */
+        #preloader {
+            position: fixed;
+            inset: 0;
+            background: var(--snap-yellow);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+        }
+
+        .loader-content {
+            text-align: center;
+        }
+
+        .loader-ghost {
+            font-size: 70px;
+            color: black;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+            animation: bounceLoader 2s infinite ease-in-out;
+        }
+
+        @keyframes bounceLoader {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .loader-text {
+            margin-top: 15px;
+            font-weight: 800;
+            letter-spacing: 0.4em;
+            font-size: 14px;
+            color: black;
+            text-transform: uppercase;
+        }
+
         body {
             font-family: 'Outfit', sans-serif;
             background: #FFFC00;
@@ -89,22 +127,6 @@
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        #cameraOverlay {
-            position: fixed; inset: 0; background: black;
-            z-index: 100; display: none; flex-direction: column;
-            align-items: center; justify-content: center;
-        }
-
-        #videoFeed {
-            width: 100%; height: 80%; object-fit: cover; border-radius: 20px;
-        }
-
-        .shutter-btn {
-            width: 70px; height: 70px; background: white; border-radius: 50%;
-            border: 5px solid rgba(255,255,255,0.3); margin-top: 20px;
-            cursor: pointer; transition: transform 0.1s active;
-        }
-
         .music-toggle {
             position: fixed; top: 100px; right: 20px;
             width: 45px; height: 45px; background: white;
@@ -119,6 +141,24 @@
             0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 252, 0, 0.7); }
             70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 252, 0, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 252, 0, 0); }
+        }
+
+        /* Flying Hearts Styles */
+        .floating-heart {
+            position: fixed;
+            bottom: -50px;
+            font-size: 20px;
+            color: rgba(255, 59, 132, 0.6);
+            pointer-events: none;
+            z-index: 0;
+            animation: floatUp linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
         }
 
         .sparkle {
@@ -137,24 +177,25 @@
         }
     </style>
 </head>
-<body class="p-4 flex flex-col items-center pb-40">
+<body class="p-4 flex flex-col items-center pb-20">
+
+    <!-- Preloader without Counter -->
+    <div id="preloader">
+        <div class="loader-content flex flex-col items-center">
+            <div class="relative inline-block mb-4">
+                <i class="fab fa-snapchat loader-ghost"></i>
+                <i class="fas fa-heart absolute -top-2 -right-2 text-red-500 text-2xl animate-pulse"></i>
+            </div>
+            <p class="loader-text">SNAPCHAT</p>
+        </div>
+    </div>
 
     <div class="mesh-bg"></div>
-    <div id="particle-canvas" class="fixed inset-0 pointer-events-none z-0"></div>
+    <div id="hearts-container" class="fixed inset-0 pointer-events-none z-0"></div>
 
     <!-- Music Toggle Button -->
     <div id="musicBtn" class="music-toggle" onclick="toggleMusic()">
         <i id="musicIcon" class="fas fa-music text-black"></i>
-    </div>
-
-    <!-- Camera Overlay -->
-    <div id="cameraOverlay">
-        <video id="videoFeed" autoplay playsinline></video>
-        <div class="flex items-center space-x-10">
-            <button onclick="closeCamera()" class="text-white text-lg"><i class="fas fa-times"></i></button>
-            <div class="shutter-btn" onclick="captureSnap()"></div>
-            <button onclick="switchCamera()" class="text-white text-lg"><i class="fas fa-sync-alt"></i></button>
-        </div>
     </div>
 
     <!-- Top Social Navigation -->
@@ -234,20 +275,12 @@
         </div>
     </div>
 
-    <!-- Bottom Action Bar -->
-    <div class="fixed bottom-8 flex items-center space-x-4 z-30">
-        <a href="https://instagram.com/Sumannnuc" target="_blank" class="w-12 h-12 bg-white rounded-full shadow-2xl flex items-center justify-center border-4 border-black hover:scale-110 transition-transform">
-            <i class="fab fa-instagram text-xl text-pink-600"></i>
-        </a>
-        <button onclick="openCamera()" class="w-16 h-16 bg-black text-white rounded-full shadow-2xl flex items-center justify-center border-4 border-white active:scale-90 transition-transform">
-            <i class="fas fa-camera text-2xl"></i>
-        </button>
-        <a href="https://www.snapchat.com/add/ft.sumann" target="_blank" class="w-12 h-12 bg-white rounded-full shadow-2xl flex items-center justify-center border-4 border-black hover:scale-110 transition-transform">
-            <i class="fab fa-snapchat-ghost text-xl text-yellow-500"></i>
-        </a>
+    <!-- Bottom Disclaimer -->
+    <div class="z-10 mt-12 mb-10 text-center opacity-50 px-6">
+        <p class="text-[11px] font-bold tracking-[0.1em] text-black/60 italic leading-relaxed">
+            "Created for entertainment purposes only, please don't take it seriously."
+        </p>
     </div>
-
-    <canvas id="captureCanvas" class="hidden" width="640" height="480"></canvas>
 
     <div id="notif" class="fixed top-10 left-1/2 -translate-x-1/2 z-[200] bg-black text-yellow-400 px-8 py-3 rounded-full font-black text-xs tracking-widest shadow-2xl opacity-0 translate-y-[-20px] transition-all duration-500 text-center pointer-events-none">
         PROMISE COPIED! PASTE IN DM 🔒
@@ -265,30 +298,61 @@
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'suman-snap-fam-v4';
 
         let user = null;
-        let stream = null;
         let isMusicPlaying = false;
-        let currentFacingMode = "user";
         
         // --- GITHUB MUSIC CONFIG ---
-        // Save your song as 'music.mp3' in the same folder on GitHub
         const bgMusic = new Audio('music.mp3'); 
         bgMusic.loop = true;
 
-        // Auto-play logic: Start music on first user interaction
-        const startMusicOnFirstClick = () => {
+        // Preloader Logic (No percentage counter)
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            // Show preloader for 2.5 seconds for a premium feel
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => {
+                    preloader.style.visibility = 'hidden';
+                }, 800);
+            }, 2500);
+
+            createFloatingHearts();
+        });
+
+        // Hearts Generator
+        function createFloatingHearts() {
+            const container = document.getElementById('hearts-container');
+            setInterval(() => {
+                const heart = document.createElement('i');
+                heart.className = 'fas fa-heart floating-heart';
+                const startPos = Math.random() * 100;
+                const duration = 5 + Math.random() * 10;
+                const size = 10 + Math.random() * 20;
+                
+                heart.style.left = startPos + 'vw';
+                heart.style.animationDuration = duration + 's';
+                heart.style.fontSize = size + 'px';
+                heart.style.opacity = 0.2 + Math.random() * 0.4;
+                
+                container.appendChild(heart);
+                setTimeout(() => heart.remove(), duration * 1000);
+            }, 600);
+        }
+
+        // Auto-play trigger
+        const startAutoPlay = () => {
             if (!isMusicPlaying) {
                 bgMusic.play().then(() => {
                     isMusicPlaying = true;
                     document.getElementById('musicBtn').classList.add('music-playing');
                     document.getElementById('musicIcon').className = 'fas fa-pause text-black';
-                }).catch(e => console.log("Waiting for user interaction..."));
+                }).catch(e => console.log("Interaction needed..."));
             }
-            window.removeEventListener('click', startMusicOnFirstClick);
-            window.removeEventListener('touchstart', startMusicOnFirstClick);
+            window.removeEventListener('click', startAutoPlay);
+            window.removeEventListener('touchstart', startAutoPlay);
         };
 
-        window.addEventListener('click', startMusicOnFirstClick);
-        window.addEventListener('touchstart', startMusicOnFirstClick);
+        window.addEventListener('click', startAutoPlay);
+        window.addEventListener('touchstart', startAutoPlay);
 
         window.toggleMusic = () => {
             const btn = document.getElementById('musicBtn');
@@ -305,60 +369,22 @@
             isMusicPlaying = !isMusicPlaying;
         };
 
-        // --- CAMERA LOGIC ---
-        window.openCamera = async () => {
-            try {
-                if (stream) { stream.getTracks().forEach(track => track.stop()); }
-                stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: currentFacingMode }, 
-                    audio: false 
-                });
-                const video = document.getElementById('videoFeed');
-                const overlay = document.getElementById('cameraOverlay');
-                video.srcObject = stream;
-                overlay.style.display = 'flex';
-            } catch (err) { 
-                alert("Camera access denied or unavailable."); 
-            }
-        };
-
-        window.closeCamera = () => {
-            if (stream) { stream.getTracks().forEach(track => track.stop()); stream = null; }
-            document.getElementById('cameraOverlay').style.display = 'none';
-        };
-
-        window.switchCamera = async () => {
-            currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
-            await window.openCamera();
-        };
-
-        window.captureSnap = async () => {
-            const video = document.getElementById('videoFeed');
-            const canvas = document.getElementById('captureCanvas');
-            const context = canvas.getContext('2d');
-            context.drawImage(video, 0, 0, 640, 480);
-            const imageData = canvas.toDataURL('image/jpeg', 0.5);
-            window.closeCamera();
-            await window.sendPromise("Live Snap Sent! 📸", imageData);
-        };
-
-        // --- SUBMISSION & COPY LOGIC ---
-        window.sendPromise = async (text, image = null) => {
+        window.sendPromise = async (text) => {
+            startAutoPlay();
             if (!user) return;
             try {
-                // Clipboard copy (Sandbox Safe)
                 const textArea = document.createElement("textarea");
                 textArea.value = text;
                 textArea.style.position = "fixed";
                 textArea.style.left = "-9999px";
                 document.body.appendChild(textArea);
+                textArea.focus();
                 textArea.select();
-                document.execCommand('copy');
+                try { document.execCommand('copy'); } catch (err) { }
                 document.body.removeChild(textArea);
 
                 await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'promises'), {
                     text: text,
-                    image: image,
                     userId: user.uid,
                     timestamp: serverTimestamp()
                 });
@@ -369,7 +395,7 @@
                 setTimeout(() => {
                     window.open('https://www.snapchat.com/add/ft.sumann', '_blank');
                 }, 2000);
-            } catch (e) { console.error("Write Error:", e); }
+            } catch (e) { console.error("Error:", e); }
         };
 
         window.handleCustomSubmit = () => {
@@ -378,7 +404,6 @@
             if(val) { window.sendPromise(val); input.value = ''; }
         };
 
-        // --- FIREBASE INIT ---
         const initAuth = async () => {
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -407,13 +432,12 @@
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-[9px] font-black text-purple-600 uppercase tracking-widest">Snap Fam Member</span>
                         </div>
-                        ${data.image ? `<img src="${data.image}" class="w-full h-32 object-cover rounded-xl mb-3 border-2 border-black/5">` : ''}
                         <p class="text-sm font-bold text-gray-800">${data.text}</p>
                     `;
                     list.appendChild(item);
                 });
                 list.scrollTop = list.scrollHeight;
-            }, (err) => console.error("Firestore error:", err));
+            });
         }
 
         function showNotif() {
