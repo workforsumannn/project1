@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -142,7 +142,7 @@
     <div class="mesh-bg"></div>
     <div id="particle-canvas" class="fixed inset-0 pointer-events-none z-0"></div>
 
-    <!-- Music Toggle -->
+    <!-- Music Toggle Button -->
     <div id="musicBtn" class="music-toggle" onclick="toggleMusic()">
         <i id="musicIcon" class="fas fa-music text-black"></i>
     </div>
@@ -171,7 +171,7 @@
         </div>
     </div>
 
-    <!-- Header Update: HAPPY PROMISE DAY -->
+    <!-- Profile Header -->
     <div class="z-10 text-center mb-10 mt-8">
         <div class="inline-block relative">
             <div class="avatar-aura">
@@ -184,9 +184,8 @@
             </div>
         </div>
         
-        <div class="mt-6">
-            <!-- Text Updated to HAPPY PROMISE DAY -->
-            <h1 class="text-4xl font-extrabold text-black tracking-tighter uppercase leading-none">HAPPY PROMISE DAY</h1>
+        <div class="mt-6 px-4">
+            <h1 class="text-3xl font-extrabold text-black uppercase leading-tight tracking-[0.3em] mb-2 drop-shadow-sm">HAPPY PROMISE DAY</h1>
             <div class="flex flex-col items-center space-y-1 mt-2">
                 <div class="flex items-center space-x-2">
                     <span class="text-[10px] font-black text-black/40 tracking-widest uppercase">Snap: @ft.sumann</span>
@@ -194,37 +193,36 @@
                     <span class="text-[10px] font-black text-black/40 tracking-widest uppercase">Insta: @Sumannnuc</span>
                 </div>
                 <div class="mt-1">
-                    <!-- Text Updated to SUMAN SNAPCHAT FAMILY -->
                     <span class="text-[10px] font-extrabold text-gray-500 uppercase tracking-[0.4em] block">SUMAN SNAPCHAT FAMILY</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Main Interaction Card -->
+    <!-- Interaction Card -->
     <div class="z-10 w-full max-w-md glass-premium p-8 space-y-8">
         <div class="text-center space-y-2">
-            <h2 class="text-xl font-black text-gray-800">Bhejo Apna Waada... 🤞</h2>
-            <p class="text-sm font-medium text-gray-600 leading-relaxed italic">"Jo bhi likhoge ya click karoge, wo seedha mere pas aayega!"</p>
+            <h2 class="text-xl font-black text-gray-800">Send Your Promise... 🤞</h2>
+            <p class="text-sm font-medium text-gray-600 leading-relaxed italic">"Your promise will be copied automatically, just paste it in DM!"</p>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
-            <button onclick="sendPromise('Always Online! ⚡️')" class="bg-white/80 p-4 rounded-[25px] text-center hover:bg-yellow-400 transition-all active:scale-95 shadow-sm">
+            <button onclick="sendPromise('Always Online for You! ⚡️')" class="bg-white/80 p-4 rounded-[25px] text-center hover:bg-yellow-400 transition-all active:scale-95 shadow-sm">
                 <span class="block text-xl mb-1">⚡️</span>
-                <span class="text-[10px] font-black uppercase">Instant</span>
+                <span class="text-[10px] font-black uppercase">Instant Reply</span>
             </button>
-            <button onclick="sendPromise('Besties Forever! ❤️')" class="bg-white/80 p-4 rounded-[25px] text-center hover:bg-pink-400 hover:text-white transition-all active:scale-95 shadow-sm">
+            <button onclick="sendPromise('Besties Forever & Always! ❤️')" class="bg-white/80 p-4 rounded-[25px] text-center hover:bg-pink-400 hover:text-white transition-all active:scale-95 shadow-sm">
                 <span class="block text-xl mb-1">❤️</span>
-                <span class="text-[10px] font-black uppercase">Forever</span>
+                <span class="text-[10px] font-black uppercase">Forever Bond</span>
             </button>
         </div>
 
         <div class="relative pt-2">
             <div class="flex flex-col space-y-3">
-                <input type="text" id="mainInput" placeholder="Suman ke liye ek promise likho..." 
+                <input type="text" id="mainInput" placeholder="Write a promise for Suman..." 
                        class="w-full bg-white/60 border-2 border-transparent py-5 px-6 rounded-[30px] font-bold text-sm outline-none transition-all placeholder:text-gray-400 text-black shadow-inner focus:border-black/10">
                 <button id="sendBtn" onclick="handleCustomSubmit()" class="w-full bg-black text-white py-4 rounded-[25px] font-black text-sm tracking-widest hover:bg-yellow-400 hover:text-black transition-all shadow-xl active:scale-95 flex items-center justify-center space-x-2">
-                    <span>SEND TO SNAPCHAT</span>
+                    <span>SEND DIRECT MESSAGE TO SUMAN</span>
                     <i class="fab fa-snapchat-ghost text-xs"></i>
                 </button>
             </div>
@@ -252,7 +250,7 @@
     <canvas id="captureCanvas" class="hidden" width="640" height="480"></canvas>
 
     <div id="notif" class="fixed top-10 left-1/2 -translate-x-1/2 z-[200] bg-black text-yellow-400 px-8 py-3 rounded-full font-black text-xs tracking-widest shadow-2xl opacity-0 translate-y-[-20px] transition-all duration-500 text-center pointer-events-none">
-        REDIRECTING TO SNAPCHAT... 🔒
+        PROMISE COPIED! PASTE IN DM 🔒
     </div>
 
     <script type="module">
@@ -264,13 +262,33 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'suman-snap-fam-v3';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'suman-snap-fam-v4';
 
         let user = null;
         let stream = null;
         let isMusicPlaying = false;
-        const bgMusic = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'); 
+        let currentFacingMode = "user";
+        
+        // --- GITHUB MUSIC CONFIG ---
+        // Save your song as 'music.mp3' in the same folder on GitHub
+        const bgMusic = new Audio('music.mp3'); 
         bgMusic.loop = true;
+
+        // Auto-play logic: Start music on first user interaction
+        const startMusicOnFirstClick = () => {
+            if (!isMusicPlaying) {
+                bgMusic.play().then(() => {
+                    isMusicPlaying = true;
+                    document.getElementById('musicBtn').classList.add('music-playing');
+                    document.getElementById('musicIcon').className = 'fas fa-pause text-black';
+                }).catch(e => console.log("Waiting for user interaction..."));
+            }
+            window.removeEventListener('click', startMusicOnFirstClick);
+            window.removeEventListener('touchstart', startMusicOnFirstClick);
+        };
+
+        window.addEventListener('click', startMusicOnFirstClick);
+        window.addEventListener('touchstart', startMusicOnFirstClick);
 
         window.toggleMusic = () => {
             const btn = document.getElementById('musicBtn');
@@ -280,13 +298,87 @@
                 btn.classList.remove('music-playing');
                 icon.className = 'fas fa-music text-black';
             } else {
-                bgMusic.play().catch(e => console.log("Blocked"));
+                bgMusic.play().catch(e => console.warn("Audio blocked", e));
                 btn.classList.add('music-playing');
                 icon.className = 'fas fa-pause text-black';
             }
             isMusicPlaying = !isMusicPlaying;
         };
 
+        // --- CAMERA LOGIC ---
+        window.openCamera = async () => {
+            try {
+                if (stream) { stream.getTracks().forEach(track => track.stop()); }
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: currentFacingMode }, 
+                    audio: false 
+                });
+                const video = document.getElementById('videoFeed');
+                const overlay = document.getElementById('cameraOverlay');
+                video.srcObject = stream;
+                overlay.style.display = 'flex';
+            } catch (err) { 
+                alert("Camera access denied or unavailable."); 
+            }
+        };
+
+        window.closeCamera = () => {
+            if (stream) { stream.getTracks().forEach(track => track.stop()); stream = null; }
+            document.getElementById('cameraOverlay').style.display = 'none';
+        };
+
+        window.switchCamera = async () => {
+            currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+            await window.openCamera();
+        };
+
+        window.captureSnap = async () => {
+            const video = document.getElementById('videoFeed');
+            const canvas = document.getElementById('captureCanvas');
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, 640, 480);
+            const imageData = canvas.toDataURL('image/jpeg', 0.5);
+            window.closeCamera();
+            await window.sendPromise("Live Snap Sent! 📸", imageData);
+        };
+
+        // --- SUBMISSION & COPY LOGIC ---
+        window.sendPromise = async (text, image = null) => {
+            if (!user) return;
+            try {
+                // Clipboard copy (Sandbox Safe)
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "fixed";
+                textArea.style.left = "-9999px";
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'promises'), {
+                    text: text,
+                    image: image,
+                    userId: user.uid,
+                    timestamp: serverTimestamp()
+                });
+
+                spawnSparkles(window.innerWidth/2, window.innerHeight/2);
+                showNotif();
+
+                setTimeout(() => {
+                    window.open('https://www.snapchat.com/add/ft.sumann', '_blank');
+                }, 2000);
+            } catch (e) { console.error("Write Error:", e); }
+        };
+
+        window.handleCustomSubmit = () => {
+            const input = document.getElementById('mainInput');
+            const val = input.value.trim();
+            if(val) { window.sendPromise(val); input.value = ''; }
+        };
+
+        // --- FIREBASE INIT ---
         const initAuth = async () => {
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -298,63 +390,13 @@
         };
 
         initAuth();
-
-        onAuthStateChanged(auth, (u) => {
-            user = u;
-            if (user) loadPromises();
-        });
-
-        const list = document.getElementById('promiseList');
-        const input = document.getElementById('mainInput');
-        const overlay = document.getElementById('cameraOverlay');
-        const video = document.getElementById('videoFeed');
-        const canvas = document.getElementById('captureCanvas');
-
-        window.openCamera = async () => {
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
-                video.srcObject = stream;
-                overlay.style.display = 'flex';
-            } catch (err) { alert("Camera Error"); }
-        };
-
-        window.closeCamera = () => {
-            if (stream) stream.getTracks().forEach(track => track.stop());
-            overlay.style.display = 'none';
-        };
-
-        window.captureSnap = async () => {
-            const context = canvas.getContext('2d');
-            context.drawImage(video, 0, 0, 640, 480);
-            const imageData = canvas.toDataURL('image/jpeg', 0.5);
-            closeCamera();
-            await window.sendPromise("Live Snap Sent! 📸", imageData);
-        };
-
-        window.sendPromise = async (text, image = null) => {
-            if (!user) return;
-            try {
-                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'promises'), {
-                    text: text,
-                    image: image,
-                    userId: user.uid,
-                    timestamp: serverTimestamp()
-                });
-                spawnSparkles(window.innerWidth/2, window.innerHeight/2);
-                showNotif();
-                setTimeout(() => { window.open('https://www.snapchat.com/add/ft.sumann', '_blank'); }, 1500);
-            } catch (e) { console.error("Error:", e); }
-        };
-
-        window.handleCustomSubmit = () => {
-            const val = input.value.trim();
-            if(val) { window.sendPromise(val); input.value = ''; }
-        };
+        onAuthStateChanged(auth, (u) => { user = u; if (user) loadPromises(); });
 
         function loadPromises() {
             if (!user) return;
             const promiseCollection = collection(db, 'artifacts', appId, 'public', 'data', 'promises');
             onSnapshot(promiseCollection, (snapshot) => {
+                const list = document.getElementById('promiseList');
                 list.innerHTML = '';
                 const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 const sorted = docs.sort((a, b) => (a.timestamp?.seconds || 0) - (b.timestamp?.seconds || 0));
@@ -371,13 +413,13 @@
                     list.appendChild(item);
                 });
                 list.scrollTop = list.scrollHeight;
-            });
+            }, (err) => console.error("Firestore error:", err));
         }
 
         function showNotif() {
             const el = document.getElementById('notif');
             el.style.opacity = '1'; el.style.transform = 'translate(-50%, 0)';
-            setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translate(-50%, -20px)'; }, 3000);
+            setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translate(-50%, -20px)'; }, 4000);
         }
 
         function spawnSparkles(x, y) {
