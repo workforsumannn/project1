@@ -3,374 +3,394 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Annu Ka Magical World - Music Edition</title>
+    <title>Suman Snapchat Family - Promise Day ✨</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+        :root {
+            --snap-yellow: #FFFC00;
+            --snap-blue: #00AEFF;
+            --snap-purple: #9b51e0;
+            --insta-gradient: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%, #e1f5fe 100%);
+            font-family: 'Outfit', sans-serif;
+            background: #FFFC00;
+            background: linear-gradient(180deg, #FFFC00 0%, #ff9a9e 50%, #fbc2eb 100%);
             min-height: 100vh;
             overflow-x: hidden;
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" style="font-size: 20px;"><text y="16">✨</text></svg>'), auto;
+            color: #1a1a1a;
         }
 
-        .title-font { font-family: 'Dancing Script', cursive; }
-
-        .floating { animation: float 3s ease-in-out infinite; }
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-        }
-
-        /* Particles */
-        .particle {
+        .mesh-bg {
             position: fixed;
-            pointer-events: none;
+            top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            animation: moveUp 5s linear infinite;
+            background-color: #FFFC00;
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+                radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+                radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            opacity: 0.15;
+            filter: blur(100px);
         }
 
-        @keyframes moveUp {
-            0% { transform: translateY(100vh) scale(0.5); opacity: 1; }
-            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
-        }
-
-        .glass-card {
-            background: rgba(255, 255, 255, 0.82);
-            backdrop-filter: blur(15px);
+        .glass-premium {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(25px) saturate(180%);
             border: 1px solid rgba(255, 255, 255, 0.5);
-            border-radius: 30px;
-            transition: transform 0.3s ease;
-        }
-        .glass-card:hover { transform: translateY(-5px); }
-
-        .btn-magic {
-            background: linear-gradient(45deg, #ff4081, #f06292);
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 4px 15px rgba(255, 64, 129, 0.2);
+            border-radius: 45px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
         }
 
-        .btn-magic:hover { transform: scale(1.05); box-shadow: 0 8px 25px rgba(255, 64, 129, 0.4); }
-
-        .love-meter-bar {
-            height: 16px; width: 0%; background: linear-gradient(90deg, #ff80ab, #ff4081, #ba68c8);
-            transition: width 2s cubic-bezier(0.4, 0, 0.2, 1);
+        .avatar-aura {
+            position: relative;
+            padding: 8px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, #FFFC00, #ff4d4d, #9b51e0, #00AEFF, #FFFC00);
+            animation: rotateAura 4s linear infinite;
         }
 
-        /* Music Visualizer Animation */
-        .bar {
-            width: 4px; height: 10px; background: #ff4081; border-radius: 2px;
-            animation: bounce 0.5s ease-in-out infinite alternate;
-        }
-        @keyframes bounce {
-            from { height: 10px; }
-            to { height: 30px; }
+        @keyframes rotateAura {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
-        .shake:hover { animation: shake 0.5s ease-in-out; }
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+        .profile-pic-container {
+            background: black;
+            border-radius: 50%;
+            width: 110px;
+            height: 110px;
+            display: flex;
+            align-items: center; justify-content: center;
+            border: 4px solid white;
+            position: relative; z-index: 2;
+        }
+
+        .social-badge {
+            color: white; padding: 6px 12px; border-radius: 20px;
+            font-size: 10px; font-weight: 800; border: 2px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: all 0.3s ease;
+        }
+
+        .insta-badge { background: var(--insta-gradient); }
+        .snap-badge { background: black; color: var(--snap-yellow); }
+
+        .chat-bubble {
+            animation: slideUp 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+            border-left: 4px solid #FFFC00;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        #cameraOverlay {
+            position: fixed; inset: 0; background: black;
+            z-index: 100; display: none; flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+
+        #videoFeed {
+            width: 100%; height: 80%; object-fit: cover; border-radius: 20px;
+        }
+
+        .shutter-btn {
+            width: 70px; height: 70px; background: white; border-radius: 50%;
+            border: 5px solid rgba(255,255,255,0.3); margin-top: 20px;
+            cursor: pointer; transition: transform 0.1s active;
+        }
+
+        .music-toggle {
+            position: fixed; top: 100px; right: 20px;
+            width: 45px; height: 45px; background: white;
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; shadow: 0 10px 20px rgba(0,0,0,0.1);
+            z-index: 50; border: 2px solid black; cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .music-playing { animation: pulseMusic 1.5s infinite; }
+        @keyframes pulseMusic {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 252, 0, 0.7); }
+            70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(255, 252, 0, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 252, 0, 0); }
+        }
+
+        .sparkle {
+            position: absolute; pointer-events: none;
+            animation: sparkleAnim 1s linear forwards;
+        }
+
+        @keyframes sparkleAnim {
+            0% { transform: translate(0, 0) scale(0); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(1); opacity: 0; }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.1); border-radius: 10px;
         }
     </style>
 </head>
-<body class="flex flex-col items-center p-4 py-10" onclick="spawnClickEffect(event)">
+<body class="p-4 flex flex-col items-center pb-40">
 
-    <div id="particle-container"></div>
-    <div id="confetti-container"></div>
+    <div class="mesh-bg"></div>
+    <div id="particle-canvas" class="fixed inset-0 pointer-events-none z-0"></div>
 
-    <!-- Header Section -->
-    <div class="max-w-md w-full glass-card p-8 shadow-2xl text-center relative z-10 mb-8 border-t-4 border-pink-400">
-        <h1 class="text-6xl title-font text-pink-600 mb-2 floating">Annu's World ✨</h1>
-        <p class="text-gray-500 italic font-medium">Music, Magic & Pure Happiness!</p>
+    <!-- Music Toggle -->
+    <div id="musicBtn" class="music-toggle" onclick="toggleMusic()">
+        <i id="musicIcon" class="fas fa-music text-black"></i>
     </div>
 
-    <!-- NEW: Music Player UI -->
-    <div class="max-w-md w-full glass-card p-6 shadow-xl text-center relative z-10 mb-8 border-l-8 border-pink-500">
-        <h3 class="text-pink-600 font-bold mb-4 text-xs tracking-widest uppercase">Annu's Favorite Track 🎵</h3>
-        <div class="flex items-center justify-center gap-4 mb-4">
-            <div id="visualizer" class="hidden flex items-end gap-1 h-10">
-                <div class="bar" style="animation-delay: 0.1s"></div>
-                <div class="bar" style="animation-delay: 0.3s"></div>
-                <div class="bar" style="animation-delay: 0.2s"></div>
-                <div class="bar" style="animation-delay: 0.4s"></div>
+    <!-- Camera Overlay -->
+    <div id="cameraOverlay">
+        <video id="videoFeed" autoplay playsinline></video>
+        <div class="flex items-center space-x-10">
+            <button onclick="closeCamera()" class="text-white text-lg"><i class="fas fa-times"></i></button>
+            <div class="shutter-btn" onclick="captureSnap()"></div>
+            <button onclick="switchCamera()" class="text-white text-lg"><i class="fas fa-sync-alt"></i></button>
+        </div>
+    </div>
+
+    <!-- Top Social Navigation -->
+    <div class="z-20 w-full max-w-md flex flex-col space-y-3 mt-4 px-2">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-3 bg-black/90 text-white px-5 py-2.5 rounded-full shadow-2xl border border-white/20">
+                <i class="fas fa-fire text-orange-400 animate-pulse"></i>
+                <span class="text-xs font-black tracking-widest uppercase">999+ Streak</span>
             </div>
-            <button onclick="toggleMusic()" id="music-btn" class="w-16 h-16 rounded-full bg-pink-500 text-white flex items-center justify-center shadow-lg hover:scale-110 transition active:scale-95">
-                <span id="play-icon" class="text-2xl">▶️</span>
+            <div class="flex space-x-2">
+                <a href="https://instagram.com/Sumannnuc" target="_blank" class="social-badge insta-badge"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.snapchat.com/add/ft.sumann" target="_blank" class="social-badge snap-badge"><i class="fab fa-snapchat-ghost"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Update: HAPPY PROMISE DAY -->
+    <div class="z-10 text-center mb-10 mt-8">
+        <div class="inline-block relative">
+            <div class="avatar-aura">
+                <div class="profile-pic-container">
+                    <i class="fab fa-snapchat text-6xl text-yellow-400"></i>
+                </div>
+            </div>
+            <div class="absolute -top-2 -right-2 bg-pink-500 text-white w-8 h-8 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
+                <i class="fas fa-heart text-[10px]"></i>
+            </div>
+        </div>
+        
+        <div class="mt-6">
+            <!-- Text Updated to HAPPY PROMISE DAY -->
+            <h1 class="text-4xl font-extrabold text-black tracking-tighter uppercase leading-none">HAPPY PROMISE DAY</h1>
+            <div class="flex flex-col items-center space-y-1 mt-2">
+                <div class="flex items-center space-x-2">
+                    <span class="text-[10px] font-black text-black/40 tracking-widest uppercase">Snap: @ft.sumann</span>
+                    <div class="w-1 h-1 rounded-full bg-black/20"></div>
+                    <span class="text-[10px] font-black text-black/40 tracking-widest uppercase">Insta: @Sumannnuc</span>
+                </div>
+                <div class="mt-1">
+                    <!-- Text Updated to SUMAN SNAPCHAT FAMILY -->
+                    <span class="text-[10px] font-extrabold text-gray-500 uppercase tracking-[0.4em] block">SUMAN SNAPCHAT FAMILY</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Interaction Card -->
+    <div class="z-10 w-full max-w-md glass-premium p-8 space-y-8">
+        <div class="text-center space-y-2">
+            <h2 class="text-xl font-black text-gray-800">Bhejo Apna Waada... 🤞</h2>
+            <p class="text-sm font-medium text-gray-600 leading-relaxed italic">"Jo bhi likhoge ya click karoge, wo seedha mere pas aayega!"</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="sendPromise('Always Online! ⚡️')" class="bg-white/80 p-4 rounded-[25px] text-center hover:bg-yellow-400 transition-all active:scale-95 shadow-sm">
+                <span class="block text-xl mb-1">⚡️</span>
+                <span class="text-[10px] font-black uppercase">Instant</span>
+            </button>
+            <button onclick="sendPromise('Besties Forever! ❤️')" class="bg-white/80 p-4 rounded-[25px] text-center hover:bg-pink-400 hover:text-white transition-all active:scale-95 shadow-sm">
+                <span class="block text-xl mb-1">❤️</span>
+                <span class="text-[10px] font-black uppercase">Forever</span>
             </button>
         </div>
-        <p class="text-xs text-gray-400 italic">"Background music bajane ke liye click karein"</p>
-        <!-- AUDIO TAG: Replace 'music.mp3' with your file name -->
-        <audio id="bg-audio" loop>
-            <source src="music.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
-    </div>
 
-    <!-- Secret Message Input -->
-    <div class="max-w-md w-full glass-card p-6 shadow-xl text-center relative z-10 mb-8">
-        <h3 class="text-pink-600 font-bold mb-3 uppercase text-xs tracking-tighter">Enter Secret Code 🤫</h3>
-        <input type="text" id="secret-input" placeholder="Hint: Tumhara naam..." class="w-full p-3 rounded-2xl border-2 border-pink-100 focus:border-pink-400 outline-none text-center mb-3 transition-all">
-        <button onclick="checkSecret()" class="btn-magic text-white px-8 py-2 rounded-full font-bold shadow-md">Unlock Magic</button>
-    </div>
-
-    <!-- Love Meter -->
-    <div class="max-w-md w-full glass-card p-6 shadow-xl text-center relative z-10 mb-8 overflow-hidden">
-        <h3 class="text-pink-600 font-bold mb-2">Happiness Meter 💖</h3>
-        <div class="w-full bg-gray-100 rounded-full h-4 mb-4 overflow-hidden shadow-inner">
-            <div id="love-bar" class="love-meter-bar rounded-full"></div>
-        </div>
-        <button onclick="startLoveMeter()" id="meter-btn" class="btn-magic text-white text-xs px-6 py-2 rounded-full font-bold uppercase">Check Today's Vibe</button>
-        <p id="meter-result" class="mt-2 font-bold text-pink-500 text-xl hidden animate-bounce">100% Awesome!</p>
-    </div>
-
-    <!-- Fortune & Tasks -->
-    <div class="max-w-md w-full grid grid-cols-2 gap-4 mb-8 relative z-10">
-        <div class="glass-card p-5 text-center flex flex-col items-center justify-center cursor-pointer shake" onclick="showFortune()">
-            <span class="text-4xl mb-2">🥠</span>
-            <p class="text-[10px] font-bold text-pink-600 uppercase">Fortune Cookie</p>
-        </div>
-        <div class="glass-card p-5 text-center flex flex-col items-center justify-center cursor-pointer shake" onclick="getDailyTask()">
-            <span class="text-4xl mb-2">🎯</span>
-            <p class="text-[10px] font-bold text-pink-600 uppercase">Magic Task</p>
-        </div>
-    </div>
-
-    <!-- NEW: Superpowers Section -->
-    <div class="max-w-md w-full glass-card p-6 shadow-xl text-center relative z-10 mb-8">
-        <h3 class="text-pink-600 font-bold mb-4 text-xs uppercase">Annu's Superpowers ⚡</h3>
-        <div class="flex flex-wrap justify-center gap-2">
-            <span class="bg-pink-100 text-pink-600 px-3 py-1 rounded-full text-xs font-semibold border border-pink-200">Killer Smile 😊</span>
-            <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold border border-blue-200">Infinite Cuteness 🥰</span>
-            <span class="bg-purple-100 text-purple-600 px-3 py-1 rounded-full text-xs font-semibold border border-purple-200">Angry Bird Mode 😡</span>
-            <span class="bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full text-xs font-semibold border border-yellow-200">Pure Gold Heart 💛</span>
-        </div>
-    </div>
-
-    <!-- Mood Checker -->
-    <div class="max-w-md w-full glass-card p-6 shadow-xl text-center relative z-10 mb-8">
-        <h3 class="text-pink-600 font-bold mb-4 text-sm uppercase">Current Mood?</h3>
-        <div class="flex justify-around">
-            <button onclick="setMood('Happy')" class="text-4xl hover:scale-125 transition grayscale hover:grayscale-0">😊</button>
-            <button onclick="setMood('Sad')" class="text-4xl hover:scale-125 transition grayscale hover:grayscale-0">🥺</button>
-            <button onclick="setMood('Tired')" class="text-4xl hover:scale-125 transition grayscale hover:grayscale-0">😴</button>
-        </div>
-        <p id="mood-response" class="mt-4 text-pink-400 font-medium text-sm italic min-h-[1.2rem]"></p>
-    </div>
-
-    <!-- NEW: Virtual Hug Button -->
-    <div class="max-w-md w-full mb-8 relative z-10">
-        <button onclick="sendHug()" class="w-full bg-white text-pink-500 py-4 rounded-3xl font-bold shadow-lg border-2 border-pink-200 hover:bg-pink-50 transition active:scale-95">
-            Send Virtual Hug! 🫂
-        </button>
-    </div>
-
-    <!-- Gift Section -->
-    <div class="max-w-md w-full glass-card p-8 shadow-2xl text-center relative z-10 mb-8">
-        <h3 class="text-pink-600 font-bold mb-6 uppercase text-xs tracking-widest">A Surprise Box 🎁</h3>
-        <div id="gift-area" class="relative h-24 flex items-center justify-center">
-            <div id="gift" class="w-20 h-20 bg-pink-500 rounded-lg shadow-lg flex items-center justify-center cursor-pointer transition-all hover:rotate-12" onclick="openGift()">
-                <div class="w-full h-3 bg-yellow-300 absolute"></div>
-                <div class="h-full w-3 bg-yellow-300 absolute"></div>
-                <span class="text-white font-bold z-10 text-xs">OPEN</span>
+        <div class="relative pt-2">
+            <div class="flex flex-col space-y-3">
+                <input type="text" id="mainInput" placeholder="Suman ke liye ek promise likho..." 
+                       class="w-full bg-white/60 border-2 border-transparent py-5 px-6 rounded-[30px] font-bold text-sm outline-none transition-all placeholder:text-gray-400 text-black shadow-inner focus:border-black/10">
+                <button id="sendBtn" onclick="handleCustomSubmit()" class="w-full bg-black text-white py-4 rounded-[25px] font-black text-sm tracking-widest hover:bg-yellow-400 hover:text-black transition-all shadow-xl active:scale-95 flex items-center justify-center space-x-2">
+                    <span>SEND TO SNAPCHAT</span>
+                    <i class="fab fa-snapchat-ghost text-xs"></i>
+                </button>
             </div>
-            <div id="gift-content" class="hidden text-6xl animate-bounce">🍦</div>
         </div>
-        <p id="gift-msg" class="mt-4 text-pink-500 font-bold hidden">Ek thandi ice-cream for the coolest girl!</p>
-    </div>
 
-    <!-- Final Secret Question -->
-    <div class="max-w-md w-full glass-card p-8 shadow-2xl text-center relative z-10 mb-20 border-b-8 border-pink-500">
-        <h3 class="text-lg font-bold text-pink-600 mb-6 leading-tight">Kya aap tayyar hain hamesha khush rehne ke liye?</h3>
-        <div class="flex gap-4 justify-center">
-            <button onclick="revealMessage('Haan')" class="btn-magic text-white px-8 py-3 rounded-2xl font-bold shadow-lg">Yes! ✨</button>
-            <button id="no-btn" onmouseover="moveNo()" class="bg-gray-300 text-gray-600 px-8 py-3 rounded-2xl font-bold">No 😜</button>
+        <div id="feedSection" class="pt-4 border-t border-black/5">
+            <h4 class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4 text-center">Fam Wall (Live)</h4>
+            <div id="promiseList" class="space-y-4 max-h-72 overflow-y-auto pr-2 custom-scrollbar flex flex-col-reverse"></div>
         </div>
     </div>
 
-    <!-- Custom Modal -->
-    <div id="custom-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-[1000]">
-        <div class="bg-white rounded-[35px] p-8 max-w-xs w-full text-center shadow-2xl border-t-8 border-pink-400">
-            <div id="modal-text" class="text-xl text-gray-700 mb-6 font-medium leading-relaxed"></div>
-            <button onclick="closeModal()" class="btn-magic text-white px-10 py-2 rounded-full font-bold shadow-md">Love it! ❤️</button>
-        </div>
+    <!-- Bottom Action Bar -->
+    <div class="fixed bottom-8 flex items-center space-x-4 z-30">
+        <a href="https://instagram.com/Sumannnuc" target="_blank" class="w-12 h-12 bg-white rounded-full shadow-2xl flex items-center justify-center border-4 border-black hover:scale-110 transition-transform">
+            <i class="fab fa-instagram text-xl text-pink-600"></i>
+        </a>
+        <button onclick="openCamera()" class="w-16 h-16 bg-black text-white rounded-full shadow-2xl flex items-center justify-center border-4 border-white active:scale-90 transition-transform">
+            <i class="fas fa-camera text-2xl"></i>
+        </button>
+        <a href="https://www.snapchat.com/add/ft.sumann" target="_blank" class="w-12 h-12 bg-white rounded-full shadow-2xl flex items-center justify-center border-4 border-black hover:scale-110 transition-transform">
+            <i class="fab fa-snapchat-ghost text-xl text-yellow-500"></i>
+        </a>
     </div>
 
-    <footer class="my-10 text-pink-800 text-xs font-bold opacity-60 tracking-tighter">
-        DESIGNED FOR ANNU'S SMILE ❤️
-    </footer>
+    <canvas id="captureCanvas" class="hidden" width="640" height="480"></canvas>
 
-    <script>
-        // Data arrays
-        const fortunes = [
-            "Aaj aapka luck sabse top par hai! ✨",
-            "Kuch bohot achha hone wala hai aapke saath. 🌈",
-            "Aapki smile kisi ka din bana degi aaj! 😊",
-            "You are doing great, keep going! 🚀",
-            "Aaj aapko koi surprise mil sakta hai! 🎁"
-        ];
+    <div id="notif" class="fixed top-10 left-1/2 -translate-x-1/2 z-[200] bg-black text-yellow-400 px-8 py-3 rounded-full font-black text-xs tracking-widest shadow-2xl opacity-0 translate-y-[-20px] transition-all duration-500 text-center pointer-events-none">
+        REDIRECTING TO SNAPCHAT... 🔒
+    </div>
 
-        const tasks = [
-            "Smile for 10 seconds straight! 😁",
-            "Drink a glass of water right now! 💧",
-            "Mirror mein dekh kar bolo 'I am the best'! 🪞",
-            "Close your eyes and take 3 deep breaths. 🧘‍♀️",
-            "Listen to your favorite song and dance! 🎵"
-        ];
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Background Particles
-        function createParticle() {
-            const p = document.createElement('div');
-            p.className = 'particle';
-            const icons = ['❤️', '✨', '🌸', '💖', '⭐', '🎵', '🎶'];
-            p.innerHTML = icons[Math.floor(Math.random() * icons.length)];
-            p.style.left = Math.random() * 100 + 'vw';
-            p.style.fontSize = (Math.random() * 15 + 10) + 'px';
-            p.style.animationDuration = (Math.random() * 3 + 4) + 's';
-            p.style.opacity = Math.random() * 0.5 + 0.3;
-            document.getElementById('particle-container').appendChild(p);
-            setTimeout(() => p.remove(), 5000);
-        }
-        setInterval(createParticle, 500);
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'suman-snap-fam-v3';
 
-        // Music Logic
-        function toggleMusic() {
-            const audio = document.getElementById('bg-audio');
-            const icon = document.getElementById('play-icon');
-            const vis = document.getElementById('visualizer');
-            
-            if (audio.paused) {
-                audio.play().catch(e => {
-                    alert("Pehle 'music.mp3' file add karein code mein! Tab tak enjoy the animations. 😉");
+        let user = null;
+        let stream = null;
+        let isMusicPlaying = false;
+        const bgMusic = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'); 
+        bgMusic.loop = true;
+
+        window.toggleMusic = () => {
+            const btn = document.getElementById('musicBtn');
+            const icon = document.getElementById('musicIcon');
+            if (isMusicPlaying) {
+                bgMusic.pause();
+                btn.classList.remove('music-playing');
+                icon.className = 'fas fa-music text-black';
+            } else {
+                bgMusic.play().catch(e => console.log("Blocked"));
+                btn.classList.add('music-playing');
+                icon.className = 'fas fa-pause text-black';
+            }
+            isMusicPlaying = !isMusicPlaying;
+        };
+
+        const initAuth = async () => {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) { console.error("Auth failed:", error); }
+        };
+
+        initAuth();
+
+        onAuthStateChanged(auth, (u) => {
+            user = u;
+            if (user) loadPromises();
+        });
+
+        const list = document.getElementById('promiseList');
+        const input = document.getElementById('mainInput');
+        const overlay = document.getElementById('cameraOverlay');
+        const video = document.getElementById('videoFeed');
+        const canvas = document.getElementById('captureCanvas');
+
+        window.openCamera = async () => {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+                video.srcObject = stream;
+                overlay.style.display = 'flex';
+            } catch (err) { alert("Camera Error"); }
+        };
+
+        window.closeCamera = () => {
+            if (stream) stream.getTracks().forEach(track => track.stop());
+            overlay.style.display = 'none';
+        };
+
+        window.captureSnap = async () => {
+            const context = canvas.getContext('2d');
+            context.drawImage(video, 0, 0, 640, 480);
+            const imageData = canvas.toDataURL('image/jpeg', 0.5);
+            closeCamera();
+            await window.sendPromise("Live Snap Sent! 📸", imageData);
+        };
+
+        window.sendPromise = async (text, image = null) => {
+            if (!user) return;
+            try {
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'promises'), {
+                    text: text,
+                    image: image,
+                    userId: user.uid,
+                    timestamp: serverTimestamp()
                 });
-                icon.innerText = '⏸️';
-                vis.classList.remove('hidden');
-            } else {
-                audio.pause();
-                icon.innerText = '▶️';
-                vis.classList.add('hidden');
-            }
+                spawnSparkles(window.innerWidth/2, window.innerHeight/2);
+                showNotif();
+                setTimeout(() => { window.open('https://www.snapchat.com/add/ft.sumann', '_blank'); }, 1500);
+            } catch (e) { console.error("Error:", e); }
+        };
+
+        window.handleCustomSubmit = () => {
+            const val = input.value.trim();
+            if(val) { window.sendPromise(val); input.value = ''; }
+        };
+
+        function loadPromises() {
+            if (!user) return;
+            const promiseCollection = collection(db, 'artifacts', appId, 'public', 'data', 'promises');
+            onSnapshot(promiseCollection, (snapshot) => {
+                list.innerHTML = '';
+                const docs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                const sorted = docs.sort((a, b) => (a.timestamp?.seconds || 0) - (b.timestamp?.seconds || 0));
+                sorted.forEach(data => {
+                    const item = document.createElement('div');
+                    item.className = "chat-bubble bg-white/90 p-5 rounded-[28px] rounded-bl-none shadow-sm border-l-4 border-yellow-400";
+                    item.innerHTML = `
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-[9px] font-black text-purple-600 uppercase tracking-widest">Snap Fam Member</span>
+                        </div>
+                        ${data.image ? `<img src="${data.image}" class="w-full h-32 object-cover rounded-xl mb-3 border-2 border-black/5">` : ''}
+                        <p class="text-sm font-bold text-gray-800">${data.text}</p>
+                    `;
+                    list.appendChild(item);
+                });
+                list.scrollTop = list.scrollHeight;
+            });
         }
 
-        // Virtual Hug Logic
-        function sendHug() {
+        function showNotif() {
+            const el = document.getElementById('notif');
+            el.style.opacity = '1'; el.style.transform = 'translate(-50%, 0)';
+            setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translate(-50%, -20px)'; }, 3000);
+        }
+
+        function spawnSparkles(x, y) {
             for(let i=0; i<15; i++) {
-                setTimeout(() => {
-                    const hug = document.createElement('div');
-                    hug.className = 'fixed text-6xl pointer-events-none z-[100] animate-ping';
-                    hug.innerHTML = '🫂';
-                    hug.style.left = Math.random() * 80 + 10 + 'vw';
-                    hug.style.top = Math.random() * 80 + 10 + 'vh';
-                    document.body.appendChild(hug);
-                    setTimeout(() => hug.remove(), 1000);
-                }, i * 100);
+                const s = document.createElement('div');
+                s.className = 'sparkle';
+                s.innerHTML = ['✨', '⭐', '💛', '🤞'][Math.floor(Math.random()*4)];
+                s.style.left = x + 'px'; s.style.top = y + 'px';
+                s.style.setProperty('--tx', (Math.random()-0.5)*300 + 'px');
+                s.style.setProperty('--ty', (Math.random()-0.5)*300 + 'px');
+                document.body.appendChild(s);
+                setTimeout(() => s.remove(), 1000);
             }
-            launchConfetti();
-        }
-
-        // Click Effect
-        function spawnClickEffect(e) {
-            const effect = document.createElement('div');
-            effect.className = 'absolute pointer-events-none z-[100] text-2xl animate-ping';
-            effect.innerHTML = '💖';
-            effect.style.left = (e.pageX - 15) + 'px';
-            effect.style.top = (e.pageY - 15) + 'px';
-            document.body.appendChild(effect);
-            setTimeout(() => effect.remove(), 500);
-        }
-
-        // Secret Input
-        function checkSecret() {
-            const val = document.getElementById('secret-input').value.toLowerCase().trim();
-            const modal = document.getElementById('custom-modal');
-            const mText = document.getElementById('modal-text');
-            
-            if(val === 'annu') {
-                mText.innerHTML = "Hi Annu! ❤️<br><br>Aapke liye ek baat: Aapki smile pure world mein sabse best hai! Gussa mat hua karo, smile karo! ✨";
-                modal.classList.remove('hidden');
-                launchConfetti();
-            } else {
-                alert("Wrong code! Hint: Aapka apna naam try karein. 😉");
-            }
-        }
-
-        // Other features
-        function showFortune() {
-            const mText = document.getElementById('modal-text');
-            mText.innerText = fortunes[Math.floor(Math.random() * fortunes.length)];
-            document.getElementById('custom-modal').classList.remove('hidden');
-            launchConfetti();
-        }
-
-        function getDailyTask() {
-            const mText = document.getElementById('modal-text');
-            mText.innerText = "Aaj ka Magic Task: " + tasks[Math.floor(Math.random() * tasks.length)];
-            document.getElementById('custom-modal').classList.remove('hidden');
-        }
-
-        function launchConfetti() {
-            for (let i = 0; i < 50; i++) {
-                const c = document.createElement('div');
-                c.className = 'fixed w-2 h-2 z-[100]';
-                c.style.backgroundColor = ['#ff4081', '#ffd54f', '#4fc3f7', '#ba68c8'][Math.floor(Math.random() * 4)];
-                c.style.left = Math.random() * 100 + 'vw';
-                c.style.top = '-10px';
-                c.style.transition = 'transform 3s linear, opacity 3s';
-                document.body.appendChild(c);
-                setTimeout(() => {
-                    c.style.transform = `translate(${Math.random() * 100 - 50}px, 100vh) rotate(${Math.random() * 360}deg)`;
-                    c.style.opacity = '0';
-                }, 10);
-                setTimeout(() => c.remove(), 3000);
-            }
-        }
-
-        function startLoveMeter() {
-            const bar = document.getElementById('love-bar');
-            const res = document.getElementById('meter-result');
-            bar.style.width = "100%";
-            setTimeout(() => {
-                res.classList.remove('hidden');
-                launchConfetti();
-            }, 2000);
-        }
-
-        function setMood(mood) {
-            const resp = document.getElementById('mood-response');
-            let t = (mood === 'Happy') ? "Duniya ki sabse pyari smile! ✨" : 
-                    (mood === 'Sad') ? "Sad mat ho, Annu! Main hoon na! 🍫" : 
-                    "Princess, thoda aaram kar lo! 😴";
-            resp.innerText = t;
-        }
-
-        function openGift() {
-            document.getElementById('gift').style.transform = 'scale(0) rotate(180deg)';
-            setTimeout(() => {
-                document.getElementById('gift').classList.add('hidden');
-                document.getElementById('gift-content').classList.remove('hidden');
-                document.getElementById('gift-msg').classList.remove('hidden');
-                launchConfetti();
-            }, 300);
-        }
-
-        function revealMessage(choice) {
-            const mText = document.getElementById('modal-text');
-            mText.innerText = "YAY! Aapne YES bola! Ab se aapki life mein sirf smile hogi! I promise! ❤️✨";
-            document.getElementById('custom-modal').classList.remove('hidden');
-            launchConfetti();
-        }
-
-        function closeModal() { document.getElementById('custom-modal').classList.add('hidden'); }
-
-        function moveNo() {
-            const btn = document.getElementById('no-btn');
-            btn.style.position = 'fixed';
-            btn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
-            btn.style.top = Math.random() * (window.innerHeight - 50) + 'px';
-            btn.style.zIndex = '1000';
         }
     </script>
 </body>
